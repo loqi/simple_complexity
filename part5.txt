@@ -1,4 +1,4 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 4" href="http://stickybits.azurewebsites.net/?p=1631"> or the previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 4" href="http://stickybits.azurewebsites.net/?p=1631"> or the previous page</a>
 
 <big><strong>What happens when your n value increases by one or doubles? This question is the most useful hack in this entire series.</strong> Whenever you find yourself confused, ask yourself what happens as your n value grows or shrinks. The answer you find reveals the time complexity.</big>
 

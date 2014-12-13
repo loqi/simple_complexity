@@ -1,36 +1,36 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series or the previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series or the previous page</a>
 
 <big><strong>Time complexity is not the same as execution time.</strong> It's understandable that we'd conflate the two concepts. After all, execution time is why we care about time complexity. So what's the difference?</big>
 
-To distinguish between the two concepts, let's start with some crude classifications of time complexities. There are many functions which can appear in big O, but I'll begin by broadly classifying all of them into three base categories: <strong>flattening, proportional, and steepening.</strong> Those three categories alone will get you pretty far in your analysis. Know them.
+To distinguish between the two concepts, let's start with some crude classifications of time complexities. There are many functions which can appear in big O, but I'll begin by broadly classifying all of them into three base categories: <strong>flattening, proportional, and steepening.</strong> Those three categories alone will get you pretty far in your analysis. Know them.
 
 Our introduction to the cartesian co-ordinate system was in early childhood with a one-dimensional co-ordinate system (positive number line). Later we saw how to graph single-input functions in two dimensional space, like so:
 
 <a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png"><img class="aligncenter size-full wp-image-1041" src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png" alt="threeCurvesTransparent" width="575" height="385" /></a>
 
-Here we see examples of these three broad categories. In this case, the red function is just a diagonal line. I would classify any curve that approaches a constant slope -- quasi-linear for us lexophiles -- in the broad category of <em>loosely-proportional</em> complexity. That is, if your function graphs to a curve that looks more and more like a rising diagonal line as you zoom out, you have what I'm calling a proportional-class algorithm. Loosely speaking, if you double the scale of the data, you double the computational demands to execute your algorithm.
+Here we see examples of these three broad categories. In this case, the red function is just a diagonal line. I would classify any curve that approaches a constant slope -- quasi-linear for us lexophiles -- in the broad category of <em>loosely-proportional</em> complexity. That is, if your function graphs to a curve that looks more and more like a rising diagonal line as you zoom out, you have what I'm calling a proportional-class algorithm. Loosely speaking, if you double the scale of the data, you double the computational demands to execute your algorithm.
 
-The green curve is a flattening (quasi-constant) function. As the scale of the data rises, the function's steepness approaches horizontal. The bigger your data, the more gentle the slope becomes. In practical terms this means enormous increases in the scale of the data only cause modest increases in your algorithm's computational load.
+The green curve is a flattening (quasi-constant) function. As the scale of the data rises, the function's steepness approaches horizontal. The bigger your data, the more gentle the slope becomes. In practical terms this means enormous increases in the scale of the data only cause modest increases in your algorithm's computational load.
 
-The blue function curve has the opposite property. It approaches vertical as the data scale rises, so the bigger your data, the steeper the line. It is unfeasible to apply such an algorithm to any but the smallest of data sets. Even so, these algorithms have a place in computer science. In some cases it's the only known way to solve a particular problem, or worse, the rigorously proven optimal solution to a problem. In other cases, you may actually <em>want</em> a computationally expensive algorithm, such as with cryptographic functions.
+The blue function curve has the opposite property. It approaches vertical as the data scale rises, so the bigger your data, the steeper the line. It is unfeasible to apply such an algorithm to any but the smallest of data sets. Even so, these algorithms have a place in computer science. In some cases it's the only known way to solve a particular problem, or worse, the rigorously proven optimal solution to a problem. In other cases, you may actually <em>want</em> a computationally expensive algorithm, such as with cryptographic functions.
 
-Referring to the graph one more time, note the body of the "fish" on the left end. The functions switch places at an intersection point. What's steep and high at the right is shallow and low on the left, and vice-versa. This fact can be exploited in your algorithm design. Bookmark this thought, I go deeper into it in later pages.
+Referring to the graph one more time, note the body of the "fish" on the left end. The functions switch places at an intersection point. What's steep and high at the right is shallow and low on the left, and vice-versa. This fact can be exploited in your algorithm design. Bookmark this thought, I go deeper into it in later pages.
 
-[math]O(1)[/math] algorithms are said to run in <em>constant time. </em>Constant time complexity graphs to a perfectly horizontal line, so they're the <em>most</em> flattening of all flattening algorithms.
+[math]O(1)[/math] algorithms are said to run in <em>constant time. </em>Constant time complexity graphs to a perfectly horizontal line, so they're the <em>most</em> flattening of all flattening algorithms.
 
-[math]O(n)[/math] represents <em>linear time</em>, the most proportional of proportionals. It is customary to designate the variable n in the expression if it's obvious to the reader what it represents.
+[math]O(n)[/math] represents <em>linear time</em>, the most proportional of proportionals. It is customary to designate the variable n in the expression if it's obvious to the reader what it represents.
 
-An [math]O(n^2)[/math] algorithm runs in <em>quadratic time</em> or more generally, <em>polynomial time.</em> I'm broadly classifying such an algorithm in the steepening category. Although [math]n[/math] and [math]1[/math] are technically polynomial expressions, polynomial time refers to time complexities of degree two or more.
+An [math]O(n^2)[/math] algorithm runs in <em>quadratic time</em> or more generally, <em>polynomial time.</em> I'm broadly classifying such an algorithm in the steepening category. Although [math]n[/math] and [math]1[/math] are technically polynomial expressions, polynomial time refers to time complexities of degree two or more.
 
-[math]O(2^n)[/math] signifies <em>exponential time.</em>, an extremely steepening complexity profile. So what's the most steepening of steepening profiles? There is none; we can always create a function that hugs the vertical axis more tightly than another function. Without resorting to Knuth's arrow notation, we can have a good concise contender which shows up a lot in computer science problems, [math]O(n!)[/math] or <em>factorial time.</em> We won't touch that kind of algorithm for a while.
+[math]O(2^n)[/math] signifies <em>exponential time.</em>, an extremely steepening complexity profile. So what's the most steepening of steepening profiles? There is none; we can always create a function that hugs the vertical axis more tightly than another function. Without resorting to Knuth's arrow notation, we can have a good concise contender which shows up a lot in computer science problems, [math]O(n!)[/math] or <em>factorial time.</em> We won't touch that kind of algorithm for a while.
 
 Let's try to classify an algorithm's time complexity? Consider this pseudocode:
 <pre>loop 1000 times
      loop 1000 times
           sleep 1 second</pre>
-Here we have a loop nested inside of another loop, and inside that is a very expensive operation. Is this in the steepening, proportional, or flattening category? What's the big O of this one?
+Here we have a loop nested inside of another loop, and inside that is a very expensive operation. Is this in the steepening, proportional, or flattening category? What's the big O of this one?
 
-Have a guess from wherever your knowledge is, then join me on the <a title="Simple Complexity 3" href="http://stickybits.azurewebsites.net/?p=401">next page.</a>
+Have a guess from wherever your knowledge is, then join me on the <a title="Simple Complexity 3" href="http://stickybits.azurewebsites.net/?p=401">next page.</a>
 
 &nbsp;
 

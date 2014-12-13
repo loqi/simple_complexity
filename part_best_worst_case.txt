@@ -1,10 +1,10 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity — part 4" href="http://stickybits.azurewebsites.net/?p=1631"> or the previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity — part 4" href="http://stickybits.azurewebsites.net/?p=1631"> or the previous page</a>
 
 <big><strong>"Best case, worst case, average case" -- what do they mean?</strong> These terms don't describe your algorithm. They don't describe the size of the N value. They describe the <em>initial state</em> your algorithm is asked to operate with. In other words, the most convenient and least convenient possible arrangement of input data for your particular algorithm.</big>
 
-If it always eventually produces the proper behavior (output) for any valid initial state (input), your algorithm is said to be <em>correct.</em> But some algorithms are more equal than others. Some algorithms maintain high performance even when faced with the most inconvenient possible data. This situation is described as the worst case time complexity with respect to whatever resource you're concerned with (CPU time). So one algorithm might have a flatter worst-case time complexity profile than another's worst-case profile.
+If it always eventually produces the proper behavior (output) for any valid initial state (input), your algorithm is said to be <em>correct.</em> But some algorithms are more equal than others. Some algorithms maintain high performance even when faced with the most inconvenient possible data. This situation is described as the worst case time complexity with respect to whatever resource you're concerned with (CPU time). So one algorithm might have a flatter worst-case time complexity profile than another's worst-case profile.
 
-Let's revisit the selection sort pseudocode from earlier.
+Let's revisit the selection sort pseudocode from earlier.
 <pre><strong>unsortedUpTo</strong> = <strong>array.length</strong> - 1
 loop (<strong>array.length</strong> - 1) times
   biggestAt = 0
@@ -14,11 +14,11 @@ loop (<strong>array.length</strong> - 1) times
   swap elements (unsortedUpTo, biggestAt)
   decrement unsortedUpTo
 return array</pre>
-As it stands, it remembers where the sorted region begins, which prunes out effectively half the work. Even so, it's [math]O(n^2)[/math] polynomial time because there's an array.length loop nested inside another array.length loop. Recall that we could think of this as executing a triangular number of operations, or we could think of it as a square number of smaller operations.
+As it stands, it remembers where the sorted region begins, which prunes out effectively half the work. Even so, it's [math]O(n^2)[/math] polynomial time because there's an array.length loop nested inside another array.length loop. Recall that we could think of this as executing a triangular number of operations, or we could think of it as a square number of smaller operations.
 
-There's nothing in there to prune out work when we find goodies in the data, so it runs through the whole workload every time. The best-case and worst-case time complexity of this algorithm are identical.
+There's nothing in there to prune out work when we find goodies in the data, so it runs through the whole workload every time. The best-case and worst-case time complexity of this algorithm are identical.
 
-One possible optimization would be to detect when an inner pass has resulted in a fully sorted array and then sneak out of work early when we see that happen. Here's the new pseudocode.
+One possible optimization would be to detect when an inner pass has resulted in a fully sorted array and then sneak out of work early when we see that happen. Here's the new pseudocode.
 <pre>unsortedUpTo = array.length - 1
 loop (array.length - 1) times
   biggestAt = 0
@@ -27,15 +27,15 @@ loop (array.length - 1) times
     if array[biggestAt] &lt;= array[compareAt]
       biggestAt = compareAt
 <strong>    else </strong><strong>isDone = false</strong>
-<strong>  abort outer loop if isDone</strong>
+<strong>  abort outer loop if isDone</strong>
   swap elements (unsortedUpTo, biggestAt)
   decrement unsortedUpTo
 return array</pre>
-Version 2 introduces a flag variable. This flag is initialized to true just before each inner loop begins, and then to false each time an out-of-sequence pair is encountered during the inner loop. Now we have two different time complexity profiles. If our sorting function is handed a presorted array, one traversal of the inner loop is all it takes to see we're done.
+Version 2 introduces a flag variable. This flag is initialized to true just before each inner loop begins, and then to false each time an out-of-sequence pair is encountered during the inner loop. Now we have two different time complexity profiles. If our sorting function is handed a presorted array, one traversal of the inner loop is all it takes to see we're done.
 
 In the best case, version 2 now runs in linear time [math]O(n)[/math] and in other cases it's still polynomial time [math]O(n^2)[/math] like every case for version 1.
 
-Engineering is about managing design tradeoffs. Version 2 is a bit more complicated than version 1. By reducing one kind of complexity (cheap CPU time), we have increased another kind of complexity (expensive engineering time). This cost is paid when we first write the algorithm and again every time we revisit the code in the future. This is an investment toward the payoff of faster running time every time the function is run. We may decide we want to make the investment, but we must remain explicitly aware of the tradeoffs in these terms.
+Engineering is about managing design tradeoffs. Version 2 is a bit more complicated than version 1. By reducing one kind of complexity (cheap CPU time), we have increased another kind of complexity (expensive engineering time). This cost is paid when we first write the algorithm and again every time we revisit the code in the future. This is an investment toward the payoff of faster running time every time the function is run. We may decide we want to make the investment, but we must remain explicitly aware of the tradeoffs in these terms.
 
 Okay, so it's a bit more work to write, but the work is done (for now). Our best-case profile for version 2 has been promoted without sacrificing our other time complexity profiles. Now we get to say our sort is linear time in the best case. Bragging rights have some value. After putting in the work, our selection sort function is now more awesome, right?
 
@@ -43,9 +43,9 @@ Well...
 
 Let's assume for now that we don't get to know what kind of patterns will be prevalent in our input arrays. In general, the best-case complexity profile is not meaningful unless it's expected to occur often. In this example we seem to be paying a tiny tax on every out-of sequence consecutive pair. This tiny tax is paid quadratically.
 
-Time complexity is not the same as execution time. Remember that? By dramatically improving performance for sorting sorted data, we have slightly worsened performance for just about every other kind of data. So although one of our complexity profiles has been promoted from polynomial to linear, the polynomial time profiles are now performing the same number of slightly bigger constant-time operations.
+Time complexity is not the same as execution time. Remember that? By dramatically improving performance for sorting sorted data, we have slightly worsened performance for just about every other kind of data. So although one of our complexity profiles has been promoted from polynomial to linear, the polynomial time profiles are now performing the same number of slightly bigger constant-time operations.
 
-When a significant number of out-of-sequence pairs occur in the low indexes (almost always?) it still has to do the usual two-dimensional traversal, now with a tiny bit more overhead all along the way. Here's where a judgement call is in order. Are we likely to get many requests to sort nearly sorted data? We have no way of knowing this without understanding characteristics of the likely data.
+When a significant number of out-of-sequence pairs occur in the low indexes (almost always?) it still has to do the usual two-dimensional traversal, now with a tiny bit more overhead all along the way. Here's where a judgement call is in order. Are we likely to get many requests to sort nearly sorted data? We have no way of knowing this without understanding characteristics of the likely data.
 
 It's work (additional cost) to discover such patterns to make that determination for our sorting function. We could "listen to the data" (if we have any) or we could get clever and write code to interrogate the input array and then dynamically adapt our algorithm to fit. Sounds expensive. It had better be for a big enough prize. Is that the best use of that chunk of your time. Sometimes the answer is yes.
 
@@ -53,9 +53,9 @@ This example shows an insignificant amount of extra work for a pretty good payof
 
 So what is meant by an unqualified big O expression?
 
-Unless we say otherwise, it's assumed our complexity profile describes the <em>time</em> complexity when running against the <em>worst</em> case initial state. Worst-case data can be just as unlikely as best-case data, but we care more about it because we want to harden our designs against failure.
+Unless we say otherwise, it's assumed our complexity profile describes the <em>time</em> complexity when running against the <em>worst</em> case initial state. Worst-case data can be just as unlikely as best-case data, but we care more about it because we want to harden our designs against failure.
 
-In the case of both our versions of selection sort, that would be when it's asked to sort a reverse-sequence array. In that case, it has to do every single compare, assign, and swap that is possible for the algorithm to do. Since only the best-case complexity of version 2's is something other than [math]O(n^2)[/math] our function runs in polynomial time in both the worst and average cases.
+In the case of both our versions of selection sort, that would be when it's asked to sort a reverse-sequence array. In that case, it has to do every single compare, assign, and swap that is possible for the algorithm to do. Since only the best-case complexity of version 2's is something other than [math]O(n^2)[/math] our function runs in polynomial time in both the worst and average cases.
 
 Average case is a bit slippery. What does that really mean? With a sorting algorithm, it might be understood to mean randomized data, as opposed to data systematically stacked to give your function a hard time. However, that's not really what real-world sorting applications typically see. In the real world, sorting algorithms are often run against partially sorted data.
 
