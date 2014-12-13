@@ -1,0 +1,86 @@
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 4" href="http://stickybits.azurewebsites.net/?p=1631"> or the previous page</a>
+
+<big><strong>What happens when your n value increases by one or doubles? This question is the most useful hack in this entire series.</strong> Whenever you find yourself confused, ask yourself what happens as your n value grows or shrinks. The answer you find reveals the time complexity.</big>
+
+Suppose you have a quadratic-time algorithm [math]O(n^2)[/math] and you cleverly reformulate it to run a million times faster than your previous version. What's the time complexity of this fancy new version?
+
+Both versions run in quadratic time. Both one million and one millionth are constants. Your new algorithm does a millionth of the work per step and does [math]n^2[/math] of those tiny steps; or possibly it does the same amount of work per step but only needs [math]n^2/10^6[/math] big steps. Either way, when n doubles, the computational load quadruples. <em>Both versions take a million times longer when n is a thousand times bigger.</em> The new version can handle a thousand times more data with the same execution resources, but both versions run in quadratic time.
+
+You have made an impressive speed gain by six orders of magnitude, yet you might call your efforts a super-size micro-optimization because the time complexity is the same. Whether you're running the old algorithm on a million times more computing power, or the new algorithm on an elaborate Rube Goldberg contraption of hamster wheels and steel balls, the execution profile plots to the same shape curve. When considering an algorithm, consider what happens to your execution flow.
+
+When n doubles, execution flow...
+... adds no new operation: [math]O(1)[/math] constant time
+... adds one constant-time operation: [math]O(log\ n)[/math] logarithmic time
+... doubles constant-time operations: [math]O(n)[/math] linear time
+... adds one linear-time operation: [math]O(n\ log\ n)[/math] linearithmic time
+... doubles linear-time operations: [math]O(n^2)[/math] quadratic time
+... quadruples constant-time operations: [math]O(n^2)[/math] quadratic time
+
+Note the progression of each profile building on the others, the simpler ones referenced by the more complex. So a doubling of the linear-time operations means twice as many linear-time operations which are themselves made up of twice as many constant-time operations, that is, quadrupling the number of constant-time operations.
+<pre>1 loop n times
+2      loop n times
+3           do a constant-time thing
+4 loop n times
+5      loop n times
+6           do another constant time thing</pre>
+It's fairly easy to just see that doubling n quadruples the overall run time, but let's take out our magnifying glass. We see that line 3 runs in constant time because increasing n does not give line 3 any additional work. When n doubles, the loop at line 2 <em>doubles its constant time operations.</em> i.e. that loop runs line 3 twice as many times, meaning it runs in linear time. Likewise, the loop at line 1 runs twice as many iterations as n doubles. It <em>doubles the linear-time operations;</em> it runs the loop at line 2 (linear time) twice as many times (quadratic time). We see that lines 4 through 6 follow the same pattern, giving [math]O(n^2) + O(n^2) = O(n^2)[/math] because doing two quadratic-time operations is the same time complexity as doing one, bigger quadratic-time operation, like so:
+<pre>1 loop n times
+2      loop n times
+3           do a constant-time thing
+4           do another constant time thing</pre>
+Think of that when you see "one more" of some kind of "operation" around here.
+
+For steeper profiles, see what happens when you only budge n by a little bit.
+
+When n is bigger by one, execution flow...
+... adds one constant-time operation: [math]O(n)[/math] linear time
+... adds one linear-time operation: [math]O(n^2)[/math] quadratic time
+... adds one quadratic-time operation: [math]O(n^3)[/math] cubic time
+... adds n constant-time operations: [math]O(2^n)[/math] exponential time
+... adds n factorial-time operations: [math]O(n!)[/math] (we'll circle back)
+
+These two sets of heuristics can be combined to analyze the same piece of code. Consider this top-down merge sort which is structured with a mixture of iteration and recursion:
+<pre> 1 function inPlaceMergeSort(sortArray)
+ 2    # if too short to sort, our work here is done
+ 3    if sortArray.length &lt; 2 then return sortArray
+ 4
+ 5    # Create two copy arrays of left and right half
+ 6    middleIx = sortArray.length / 2
+ 7    left = sortArray.copy(0..(middleIx-1))
+ 8    right = sortArray.copy(middleIx..end)
+ 9
+10    # Recrusively sort the two shorter arrays
+11    inPlaceMergeSort(left)
+12    inPlaceMergeSort(right)
+13
+14    # Merge the two sorted shorts to one sorted long
+15    leftIx = 0, rightIx = 0, mergeIx = 0
+16    while leftIx &lt; left.length and rightIx &lt; right.length
+17        if left[leftIx] &lt;= right[rightIx]
+18            sortArray[mergeIx++] = left[leftIx++]
+19        else
+20            sortArray[mergeIx++] = right[rightIx++]
+21    while leftIx &lt; left.length
+22        sortArray[mergeIx++] = left[leftIx++]
+23    while rightIx &lt; right.length
+24        sortArray[mergeIx++] = right[rightIx++]
+25
+26    # sortArray is now fully sorted. Return it
+27    return sortArray</pre>
+First, let's identify all the individual lines that don't run in constant time. Lines 7 and 8 must make copies of the array, a linear-time operation even if we don't see the code that does the copying. Lines 11 and 12 have unknown time complexity at this point. Lines 16, 21, and 23 set up loops to traverse the arrays along various patterns. All other lines run in constant time. This makes the whole thing except for lines 11 and 12 run in linear time with respect to sortArray.length.
+
+The two array copiers and the three while loops conspire to touch each element of sortedArray several times. A few times to copy them (both reading and writing) to temporary array locations, and again to merge them back into sorted position. [The creation and maintenance of these temporary arrays consume resources behind the code we can see, but let's assume that these are also linear-time operations.] For purposes of identifying the time complexity, we don't care how many reads or writes are performed per element, we only care that it's the same number per element regardless of the length of the array. Or more precisely, we care that there exists some constant upper bound to the number of these reads/writes. No matter how big our array is, we do the same work per element. It all adds up to one constant-time operation per element. That is, the entire sort function runs in linear time with respect to the array length, except for lines 11 and 12. We can convince ourselves it's linear time by comparing an n of 10 with an n of 11 or with an n of 20. The split copy and merge operation does one extra element's worth of work for one extra element; twice the work for twice the length.
+
+Finally, line 11 recursively sorts the left half of the array and line 12 does the right half. These lines are not reached when the array is length 1 or 0. When called against this base case, our function just returns after a couple of lines, making the function run in constant time when sorting tiny arrays. Technically, <strong>when n is a known constant, all algorithms run in constant time.</strong> If [math]n = 23[/math] then [math]O(2^n) = O(2^{23}) = O(1)[/math]. Let's leave that digression aside. Instead, let's digress into binary search.
+
+<em>"I'm thinking of a number from one to a thousand."</em> In the classic children's game, it's a constant amount of work to choose a midpoint and guess it. Each guess eliminates half the remaining search space, guaranteeing a win within [math]log_2\ 1000 = 10ish[/math] guesses. Merge sort does something similar. Each time you partition your array in two, you only need to sort half the array... and then the other half... and then merge both halves... That's less confusing than it is.
+
+Merging the two halves (lines 14..24) is a linear-time operation. Sorting each half is a linearithmic-time operation. We know this because doubling the length of the sort array <em>adds one linear-time operation.</em> Sorting <em>two</em> arrays of the same length (lines 11..12) takes twice as much execution time but has the same time complexity as sorting just one of them. [math]O( whatever ) + O( whatever ) = O( whatever)[/math] The lines before and after constitute one linear-time operation. That's more confusing than it is.
+
+This analysis seems like magic in the same way that recursion seems like magic. It gets the job done, but it's only obvious after it's obvious. The key point is that <em>doubling</em> your n value adds a linear-time operation which is now twice as long. For a sixteen-length array, line 11 takes the same execution time as the whole function takes for an eight-length array. That's what line 11 actually is. For an array twice as long, line 11 gets run twice as many times, plus one. We're doing a linear-time operation a logarithmic number of times.
+
+If this has been hard to follow, don't worry. Linearithmic recursion is challenging, but the others will now be a breeze. This page is here to provide a convenient analysis hack, not to provide immediate understanding.
+
+If you're still a bit confused, <a title="Simple Complexity 6" href="http://stickybits.azurewebsites.net/?p=9241">go here, otherwise, go here as well.</a>
+
+&nbsp;

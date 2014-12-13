@@ -1,0 +1,9 @@
+Linear Visiting nodes: n/2 + n/4 + n/8 + ... = n
+O(log number) is O(number.toString.length)
+Tiny heap vs. sorted array
+Amortized vs. immediate computational work (queue of two stacks)
+Local rotation of trees.
+Tree implemented through time, not just in memory.
+Christopher: "State is the by-product of the introduction of time into our systems" (See MIT introduction course writers)
+bogo sort - O(n!) even with array walk for sort checking.
+sleep 12 days is constant. So is sleep random time up to 12 days.

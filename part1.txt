@@ -1,0 +1,17 @@
+<small>Simple Complexity: algorithmic analysis, the easy way</small>
+
+<big><strong>Algorithmic time complexity analysis</strong> is needlessly confusing for many people. After all, the name has the words complexity, algorithm, and analysis forming an imposing wall. In my own case, the word <em>time</em> is a bit prickly, but we can dive in together anyway.</big>
+
+I see how this subject is taught and it's painful to watch. The material is often presented in a technically correct(ish) way, but you're on your own in figuring out how to make sense of it. It doesn't have to be this way. There are intuitively satisfying ways of understanding time/space complexity analysis. It's not as hard as you might have experienced in the past. It can be presented in a way that sticks.
+
+So what is an algorithm, and how can we analyze it? Some of the earliest mathematics we pracited as children was algorithm-centric. In early childhood, you reverse-engineered multi-digit counting without ever hearing the word <em>algorithm.</em> Later, you were shown multi-digit arithmetic with pencil and paper. Your teacher had you arrange written symbols into columns of digits and then methodically start at the right, add the digits, "carry the one" when a column's sum overflows, and so on. And then, somehow, as if by magic, you arrived at a bigger sum than you might have thought possible. There was no digital circuit in sight, and yet what you had there was an algorithm. If you were very lucky, you had a teacher who could explain not just how to follow the steps, but how the algorithm worked. But regardless of understanding, we can perform the steps to a successful outcome. This is a hallmark of an algorithm. It's what makes dumb computers so smart.
+
+The concept of the algorithm stretches back to antiquity. The classical civilizations had developed many useful algorithms, long before literacy, schooling, or arabic numerals went mainstream. We're porting prime number and geometry algorithms from ancient Greek to modern programming languages to this day. Algorithmic complexity analysis received rigorous study in the mid-19th century, with big O making its debut in 1894, and it's only gotten more... complex. In today's software engineering, big O is generally only concerned with a small part of the broad mathy concept of big O. We use it as a convenient, sometimes loose, standardized way of describing algorithmic complexity--a useful subset of features. Even that subset is broader than most of us will touch in our work, but we can all benefit by understanding how to derive meaning from it, and especially the limits of its descriptive powers.
+
+When we analyze an algorithm for efficiency, we're concerned with its runtime consumption of some limited resource, such as memory, network bandwidth, or most notably, CPU time. We express algorithmic complexity like so:
+<pre><strong>O( some mathematical function )</strong></pre>
+But what does that really mean? If we say one algorithm has complexity [math]O(1)[/math] while another has complexity [math]O(n^2)[/math] does that mean the first one is "better"? The short answer is <em>yes</em>. The more nuanced answer is that you have no way of knowing from big O alone which algorithm is more suited to the purpose you intend to put it to.
+
+There's a world of difference between <em>time complexity</em> and <em>execution time</em>. We examine these concepts <a title="Simple Complexity 2" href="http://stickybits.azurewebsites.net/?p=291">next.</a>
+
+&nbsp;

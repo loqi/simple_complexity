@@ -1,0 +1,68 @@
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 5" href="http://stickybits.azurewebsites.net/?p=4631"> or two pages back</a>
+
+<big>And now for something, completely different.
+<strong>The time has come for some math.</strong>
+Okay, it's not completely different.
+
+If you're the type to feel a bit nervous around logarithms, derivatives, or infinite series, don't be. They're mostly harmless. You probably never received a proper introduction in a relaxed, informal social setting of toys and games.
+
+Recall this illustration from earlier:</big>
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png" alt="threeCurvesTransparent" width="575" height="385" class="aligncenter size-full wp-image-1041" /></a>
+
+These curves do not graph the big O of anything. They graph the functions embedded in the big O expressions. Actually they're just the general impression of the shape of those functions. The colors show the three broad conceptual categories flattening, proportional, and steepening; or if you want to be more fancier-like you can call them quasi-constant, quasi-linear, and... er... steepening (sub-polynomial to super-polynomial). Here are the functions from the complexity profiles mentioned on the previous page:
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/manyCurvesTransparent.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/manyCurvesTransparent.png" alt="manyCurvesTransparent" width="575" height="385" class="aligncenter size-full wp-image-5451" /></a>
+
+In complexity analysis, we care about how high the function curve gets as n grows big. Basically, how tall a ladder to you need to draw your curve all the way to the righthand edge above the black arrowhead. You'll need a very tall ladder indeed to finish plotting this [math]n^3[/math] function. For those two super-polynomials up the left edge, you'll need to trade your ladder in for an interstellar warp drive.
+
+Another thing we care about which is almost the same thing -- the slope of the line at any given point or the derivative function of that changing slope. We won't dive into that here, but what that tells us is how much work is required to reach the next little bit of n from nearby. The vertical change is the work load, the horizontal change is the productivity. The flatter the line, the cheaper the progress.
+
+So, here's why the logarithm curve doesn't specify a base.
+
+Well, first of all, what is a logarithm?
+
+You probably learned about exponents as a pre-teen, and learned about radical root notation at about the same time, but if you received your early math education in America, they inexplicably left out logarithms. These three sisters get a little lonely and confused when one is missing. Why three? Because each is a bivalent operation. That comes out to three possible operations against three possible pairs of operands, producing three possible resolutions. Each of these operations untangles one of the three values from the other two.
+
+If any one of these propositions is true, then all three are true:
+
+[math]N = B^X[/math] :. [math]B = \sqrt[X]{N}[/math] :. [math]X = log_B\ N[/math]
+
+Or in arithmetic terms:
+
+[math]2^8 = 256[/math] :. [math]\sqrt[8]{256} = 2[/math] :. [math]log_2\ 256 = 8[/math]
+
+While we're at it, they should've taught a few more things which you might have picked up at some point over the years. Negative exponents:
+
+[math]2^{-8} = 1/256[/math] :. [math]\sqrt[-8]{1/256} = 2[/math] :. [math]log_2(1/256) = -8[/math]
+
+Fractional exponents:
+
+[math]256^{3/4} = \sqrt[4]{256^3} = (\sqrt[4]{256})^3 = 64[/math]
+[math]\sqrt[3/4]{64} = 256[/math]
+[math]log_{256}\ 64 = 3/4[/math]
+
+<strong>Okay, now for the story of why big O doesn't specify a base in its log functions.</strong>
+
+Plotting the logarithmic function for three different bases, we get three divergent curves. The bigger the n, the further apart they spread.
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/logDivergeTransparent.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/logDivergeTransparent.png" alt="logDivergeTransparent" width="600" height="180" class="aligncenter size-full wp-image-8141" /></a>
+
+Since [math]2^1 = 2[/math] and [math]2^2 = 4[/math] and [math]2^3 = 8[/math]
+then [math]log_2\ 2 = 1[/math] and [math]log_2\ 4 = 2[/math] and [math]log_2\ 8 = 3[/math]
+Likewise, [math]log_{10}\ 10 = 1[/math] and  [math]log_{1000}\ 1000 = 1[/math]
+These three log functions are plotted above as three colored curves.
+
+There is another way of plotting these three functions. Instead of having three separate curves over one vertical scale, we can have one curve over three vertical scales.
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/logMergeTransparent.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/logMergeTransparent.png" alt="logMergeTransparent" width="600" height="180" class="aligncenter size-full wp-image-8151" /></a>
+
+This demonstrates that the logarithmic function is the same shape for all bases (all constant bases greater than 1). The only difference is how much the curve is stretched/compressed vertically (upper illustration) -- or how much the scale is compressed/stretched vertically (lower illustration). We could say that the base-1000 logarithm is just the base-2 logarithm multiplied by the constant factor 0.100343irrational. In the same way that all degree-one polynomials plot to a line and all degree-two polynomials plot to a parabola, all logarithmic functions plot to the logarithmic curve.
+
+<em>You know what's coming next.</em>
+
+Since big O doesn't care about how big each operation is, it doesn't care which logarithmic base you're using. The time complexity is the same, whether your code does one hop along a thousand-tree, three hops along a ten-tree, five hops along a quad tree, ten hops along a binary tree. It generally takes about ten times more computation per hop to navigate a thousand-tree than to navigate a binary tree, but that's not quite the point here. If you could somehow create a thousand-tree that follows a hop just as fast as a binary tree follows a hop each hop still runs in constant time. Since 2 and 10 and 1000 are all constants, they don't affect the big O expression any more than the size of each constant-time hop affects big O. Just as [math]O(510) = O(1)[/math] and [math]O(3n) = O(n)[/math] so too does [math]O(log_2\ n) = O(log_{1000}\ n) = O(log\ n)[/math]
+
+Now would be a good time for you to ask how [math]O(n^2)[/math] can possibly be different from [math]O(n^3)[/math] considering that both 2 and 3 are constants. It seems the time has come for even more math.
+
+&nbsp;
