@@ -63,6 +63,7 @@ You know what's coming next.
 
 Since big O doesn't care about how big each operation is, it doesn't care which logarithmic base you're using. The time complexity is the same, whether your code does one hop along a thousand-tree, three hops along a ten-tree, five hops along a quad tree, ten hops along a binary tree. It generally takes about ten times more computation per hop to navigate a thousand-tree than to navigate a binary tree, but that's not quite the point here. If you could somehow create a thousand-tree that follows a hop just as fast as a binary tree follows a hop each hop still runs in constant time. Since 2 and 10 and 1000 are all constants, they don't affect the big O expression any more than the size of each constant-time hop affects big O. Just as [math]O(510) = O(1)[/math] and [math]O(3n) = O(n)[/math] so too does [math]O(log_2\ n) = O(log_{1000}\ n) = O(log\ n)[/math]
 
-Now would be a good time for you to ask how [math]O(n^2)[/math] can possibly be different from [math]O(n^3)[/math] considering that both 2 and 3 are constants. It seems the time has come for even more math.
+Now would be a good time for you to ask how [math]O(n^2)[/math] can possibly be different from [math]O(n^3)[/math] considering that both 2 and 3 are constants. It seems the time has come for <a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=6761">even more math.</a>
+
 
 &nbsp;
