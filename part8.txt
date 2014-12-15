@@ -1,12 +1,12 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 5" href="http://stickybits.azurewebsites.net/?p=4671"> or previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 7" href="http://stickybits.azurewebsites.net/?p=4671"> or previous page</a>
 
 <big>On the previous page, I said we won't dive into derivatives here. It depends upon the meaning of the word 'here' here. <strong>The derivative of a function is another function that describes the rate of change of the first function.</strong> Plotting a function [math]f(x)[/math] on a cartesian plane, we might interpret the derivative of that function [math]f'(x)[/math] as a second function that quantifies the continuously changing slope of the curve of the first function.</big>
 
-Imagine using a pencil to draw the curve of function <em>f</em> on a piece of graph paper taped to a tabletop. Holding the pencil by the eraser end you lay a chopstick down on the table and carefully push the pencil's writing tip along the graph paper by the pointy end of the chopstick. If you define a new function to plot the direction of the chopstick at each point in the drawing, that new function <em>f'[math] is the derivative of the first function. By convention, the slope is quantified as rise over run, or how much upward change in pencil position is needed to keep pace with rightward movement of your pencil. If the pencil goes downward as it moves to the right, this is interpreted as a negative upward movement, and thus a negative slope. A function can never have a perfectly vertical or beyond vertical (back-tracking) slope because this would make the function not a function. We won't dive into that here.
+Imagine using a pencil to draw the curve of function <em>f</em> on a piece of graph paper taped to a tabletop. Holding the pencil by the eraser end you lay a chopstick down on the table and carefully push the pencil's writing tip along the graph paper by the pointy end of the chopstick. If you define a new function to plot the direction of the chopstick at each point in the drawing, that new function [math]f'[/math] is the derivative of the first function. By convention, the slope is quantified as rise over run, or how much upward change in pencil position is needed to keep pace with rightward movement of your pencil. If the pencil goes downward as it moves to the right, this is interpreted as a negative upward movement, and thus a negative slope. A function can never have a perfectly vertical or beyond vertical (back-tracking) slope because this would make the function not a function. We won't dive into that here.
 
-So how does this relate to algorithmic complexity analysis? The short answer is that the higher the derivative at any given [em]n[/em] value, the more resource is needed to make forward progress to the next [em]n[/em] value; end of discussion.
+So how does this relate to algorithmic complexity analysis? The short answer is that the higher the derivative at any given [em]n[/em] value, the more resource is needed to make forward progress to the next [em]n[/em] value; end of discussion. Read on for a longer answer.
 
-Here's the slightly longer answer. Recall this heuristic for identifying time complexity:
+Recall this heuristic for identifying time complexity:
 
 When n is bigger by one, execution flow...
 ... adds no additional operation: [math]O(1)[/math] constant time
@@ -23,7 +23,7 @@ The derivatives of those four functions are [math]0[/math] (the <em>n</em> axis)
 
 
 
-If you identify a quadratic-time operation in your code that, through looping or recursion, runs in linear time -- runs some number of times in proportion to your n value -- then taken together the whole piece of code runs in cubic time. Alternatively, if you have a linear-time operation run in quadratic time, you also have a cubic time complexity since multiplication is commutative. [math]O(n^2) * O(n) = O(n * n^2) = O(n^3)[/math]
+If you identify a quadratic-time operation in your code that, through looping or recursion runs in linear time -- runs some number of times in proportion to your n value -- then taken together the whole piece of code runs in cubic time. Alternatively, if you have a linear-time operation run in quadratic time, you also have a cubic time complexity since multiplication is commutative. [math]O(n^2) * O(n) = O(n * n^2) = O(n^3)[/math]
 
 Continuous math is nice for smooth curve visualization, but discrete math is nice for algorithmic analysis visualization.
 

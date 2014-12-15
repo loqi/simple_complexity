@@ -6,11 +6,13 @@ Let's have another look at that top-down merge sort it pseudocode:</big>
 
 <a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/topDownMergeColorCode.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/topDownMergeColorCode.png" alt="topDownMergeColorCode" width="650" height="820" class="aligncenter size-full wp-image-9531" /></a>
 
-Green signifies constant time, blue is linear time O( sortArray.length ), red is linarithmic time O( sortArray.length * log sortArray.length ).
+Green signifies [math]O(1)[/math] constant time.
+Blue is [math]O(\ sortArray.length\ )[/math] linear time.
+Red is [math]O(\ sortArray.length\ *\ log\ sortArray.length\ )[/math] linarithmic time.
 
 The smallest bits of green code are expressions that evaluate in constant time. They may be part of bigger expressions that evaluate in linear time, but those inner expressions evaluate in constant time.
 
-Since an array can be long or short, making a copy of that array in memory consumes time and memory proportional to its length. This is a linear-time operation, since the entire array must be somehow duplicated in memory. In that blue box of code, we're copying two halves of sortArray. Each line individually and both lines together run in linear time with respect to the length of sortArray O( sortArray.length ) because doubling the length of sortArray doubles the computational work done in the blue boxes.
+Since an array can be long or short, making a copy of that array in memory consumes time and memory proportional to its length. This is a linear-time operation, since the entire array must be somehow duplicated in memory. In that blue box of code, we're copying two halves of sortArray. Each line individually and both lines together run in linear time with respect to the length of sortArray [math]O( sortArray.length )[/math] because doubling the length of sortArray doubles the computational work done in the blue boxes.
 
 There are three separate 'while' loops sharing the blue box comprising the bulk of the merge operation. These loops run in linear time both individually and collectively. After the first loop finishes, there will always be one and only one remnant in either the left or right array of a length between one element and half the length of sortArray. That remnant is copied into position with a little less work per element than the first loop. Whether it's a little less work or a lot less work per iteration, the second and third loop run in linear time because in the worst case they walk some proportion of sortArray. Although the number of iterations of the second/third loops is offset by the number of iterations of the first loop, we could imagine different logic that walks some proportion of sortArray three different times according to three independent criteria. Such code would also be three linear-time operations coalescing into a single linear-time operation because individually and together they do potentially ten times more work when sortArray is ten times longer.
 
@@ -18,7 +20,7 @@ It may seem strange to say there's constant-time code nested within linear-time 
 
 This brings us to a subtlety of big O analysis. On the previous page when I said for a known constant n, all algorithms run in constant time. Suppose you're vying for the world record at the International Brute Force N-Queens Invitational Tournament. As stipulated by tournament rules, your awesome brute-force algorithm runs in factorial time. Let's say the current record is for a 16 x 16 chessboard and you have your sights set on 17. According to your calculations, it takes 350 CPU years for your extremely naive algorithm to exhaustively search the problem space of the 17-queens puzzle. From this perspective, you're looking at a constant-time operation: [math]O(17!) = O(1)[/math].
 
-That's a valid way to look at the problem, but only if you have decided that it's useful in some way. Another valid way to look at is as an O(n!) operation, despite the fact that n is known to be 17. The meaning of your complexity profile only applies to the context that you have decided to care about.
+That's a valid way to look at the problem, but only if you have decided that it's useful in some way. Another valid way to look at is as an [math]O(n!)[/math] operation, despite the fact that n is known to be 17. The meaning of your complexity profile only applies to the context that you have decided to care about.
 
 Our code is written to handle any size of sortArray and it seems to assume the elements are numeric. However, some languages allow arbitrarily huge numerics, or can apply compare operators to compound data types like strings or objects along arbitrarily complex criteria. I have decided not to care about this and just call the comparison operations constant-time. They actually run in linear time with respect to the size of the individual elements of the array, which is constant time if there's a meaningful constant limit on that size. Or, this is constant enough to be in green if I decide that such a limit is reasonable to expect.
 
@@ -45,12 +47,12 @@ A hypothetical function is called at line 5 that takes an array and a segment le
 
 The version at the top of the page has an implicit counter as an emergent property of the recursion. Each time there's a recursion, the length of the array is halved until it reaches length 0 or 1. In this way, we count down sortArray.length over logarithmic steps rather than counting down the logarithm by steps of 1, but the effect is the same.
 
-There is another way to analyze this. <strong>If you happen to understand how merge sort works, you can just reason through it without really looking at the code.</strong> In order for merge sort to get the job done, it must somehow, in some sequence (top-down strategy, bottom-up strategy) merge all the one-length pairs into two-length singles by visiting each element in the array and doing some constant-time operation for each element. That's an [math]O(n)[/math] operation to merge the single runs into double runs, plus another [math]O(n)[/math] for doubles into quads, and so on until we progress to the point where we merge two big arrays into the final full-length array. The number of times that happens is [math]log_2\ n[/math]
+There is another way to analyze this. <em>If you already understand how merge sort works, you can just reason through it without looking at the code.</em> In order for merge sort to get the job done, it must somehow, in some sequence (top-down strategy, bottom-up strategy) merge all the one-length pairs into two-length singles by visiting each element in the array and doing some constant-time operation for each element. That's an [math]O(n)[/math] operation to merge the single runs into double runs, plus another [math]O(n)[/math] for doubles into quads, and so on until we progress to the point where we merge two big arrays into the final full-length array. The number of times that happens is [math]log_2\ n[/math]
 
 There you have it. [math]O(n\ log\ n)[/math]
 
 Note: [math]O(n) + O(n) = O(n)[/math] However [math]log_2\ n[/math] is not a constant, so summing the series [math]O(n) + O(n) + ... + O(n)[/math] for [math]log_2\ n[/math] number of terms equals [math]O(n\ log\ n)[/math]
 
-Note note: The intermittent subscript [math]2[/math] <a title="Simple Complexity 6" href="http://stickybits.azurewebsites.net/?p=4671">shall be explained presently</a>
+Note note: The intermittent subscript [math]2[/math] <a title="Simple Complexity 6" href="http://stickybits.azurewebsites.net/?p=4671">shall be explained presently.</a>
 
 &nbsp;
