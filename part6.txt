@@ -8,7 +8,7 @@ Let's have another look at that top-down merge sort it pseudocode:</big>
 
 Green signifies [math]O(1)[/math] constant time.
 Blue is [math]O(\ sortArray.length\ )[/math] linear time.
-Red is [math]O(\ sortArray.length\ *\ log\ sortArray.length\ )[/math] linarithmic time.
+Red is [math]O(\ sortArray.length\ *\ log\ sortArray.length\ )[/math] linarithmic.
 
 The smallest bits of green code are expressions that evaluate in constant time. They may be part of bigger expressions that evaluate in linear time, but those inner expressions evaluate in constant time.
 

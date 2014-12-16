@@ -15,6 +15,7 @@ When n doubles, execution flow...
 ... adds one linear-time operation: [math]O(n\ log\ n)[/math] linearithmic time
 ... doubles linear-time operations: [math]O(n^2)[/math] quadratic time
 ... quadruples constant-time operations: [math]O(n^2)[/math] quadratic time
+<strong>Read "one operation" to mean one or more operations, but not a number of operations that changes when n changes.</strong> At the risk of nagging, remember a bunch of operations constitutes one operation, so long as changing your n value doesn't change the constantness, or linearness, or logarithmicness of that operation.
 
 Note the progression of each profile building on the others, the simpler ones referenced by the more complex. So a doubling of the linear-time operations means twice as many linear-time operations which are themselves made up of twice as many constant-time operations, that is, quadrupling the number of constant-time operations.
 <pre>1 loop n times
