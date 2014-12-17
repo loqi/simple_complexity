@@ -81,7 +81,7 @@ Merging the two halves (lines 14..24) is a linear-time operation. Sorting each h
 
 This analysis seems like magic in the same way that recursion seems like magic. It gets the job done, but it's only obvious after it's obvious. The key point is that <em>doubling</em> your n value adds a linear-time operation which is now twice as long. For a sixteen-length array, line 11 takes the same execution time as the whole function takes for an eight-length array. That's what line 11 actually is. For an array twice as long, line 11 gets run twice as many times, plus one. We're doing a linear-time operation a logarithmic number of times.
 
-If this has been hard to follow, don't worry. Linearithmic recursion is challenging, but the others will now be a breeze. This page is here to provide a convenient analysis hack, not to provide immediate understanding.
+If this has been hard to follow, don't worry. Recursive patterns are challenging for many people. If clarity eludes you here, the act of struggling to see the linearithmic pattern makes the others come easier. If you see it right away, try to get deeper into some code with these patterns.
 
 If you're still a bit confused, <a title="Simple Complexity 6" href="http://stickybits.azurewebsites.net/?p=9241">go here, otherwise, go here as well.</a>
 
