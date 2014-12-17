@@ -1,6 +1,6 @@
 <a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 5" href="http://stickybits.azurewebsites.net/?p=4631"> or the previous page</a>
 
-<big><strong>Any piece of code can be analyzed for time complexity.</strong> That goes for a self-contained function, a series of consecutive lines, or just a fraction of a line. 
+<big><strong>Any piece of code can be analyzed for time complexity.</strong> That goes for a self-contained function, a series of consecutive lines, or just a fraction of a line.
 
 Let's have another look at that top-down merge sort it pseudocode:</big>
 
@@ -35,13 +35,7 @@ But how do we know the red box runs in linearithmic time?
 
 Let's try another version of merge sort.
 
-<pre> 1 function inPlaceMergeSort(sortArray)
- 2    segLen = 1
- 3    counter = ceiling(log2(sortArray.length))
- 4    while (counter--)
- 5       mergeAllPairsOfSegments(sortArray, segLen)
- 6       segLen = segLen*2
- 7    return sortArray</pre>
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/bottomUpMergeColorCode.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/bottomUpMergeColorCode.png" alt="bottomUpMergeColorCode" width="558" height="226" class="aligncenter size-full wp-image-11341" /></a>
 
 A hypothetical function is called at line 5 that takes an array and a segment length and performs the sorted merge on each pair (first+second, third+fourth, etc.) of segments (singles into doubles, doubles into quads, etc) along the entire array. This is a linear-time operation because doubling the array length doubles the computational load. Lines 5 and 6 together constitute a linear-time operation because [math]O(n) + O(1) = O(n)[/math]. In this version of merge sort we have an obvious counter variable causing a loop bound by the logarithm of the array length, making lines 4 through 6 run in [math]O(log\ n * n)[/math] time surrounded by a constant-time operation, so the whole thing is [math]O(1) + O(n\ log\ n) + O(1) = O(n\ log\ n)[/math] time.
 
