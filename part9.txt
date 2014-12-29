@@ -17,6 +17,19 @@ Let's look at insertion sort:</big>
 
 Like the earlier example selection sort, this code follows a triangular structure. The outer loop on line 2 considers each element except the first, walking forward to the right until it runs out of array. The inner loop at line 6 walks backward through the sorted region (everything to the left of the outer loop's index) shifting whatever it touches to the right by one position until it discovers the new home for the element. Line 8 overwrites the duplicate with the element and then the outer loop advances.
 
-We'll talk about best-case and worst-case analysis later. For now we can see that if the array is already sorted, line 7 will never run and line 8 overwrites each element with itself. If the array is in reverse order, the loop at line 6 iterates unsortedIndex number of times. This is a triangular algorithm. If the array begins in reverse order, line 7 is run once, then twice, then three times, until unsortedIndex reaches the last index.
+We can see that if the array is already sorted, line 7 will not run and line 8 overwrites each element with itself. If the array arrives in reverse order, the loop at line 6 iterates <em>unsortedIndex</em> number of times. This is a triangular algorithm. That is to say at most, line 7 runs once, then twice, then three times, and so on until the outer loop runs out of elements. Triangular algorithms run in [math]O(n^2)[/math] quadratic time -- same as square algorithms.
+
+Really?
+
+Let's look at how many times line 7 is run when sortArray arrives in reverse order. Given the input array,
+these are the line numbers that run in this order.
+
+[]              1 2 9
+[12]            1 2 9
+[12, 10]        1 2   3 4 5 6 7 6                           8 2 9
+[12, 10, 9]     1 2   3 4 5 6 7 6   8 2   3 4 5 6 7 6 7 6   8 2 9
+[12, 10, 9, 7]  1 2   3 4 5 6 7 6   8 2   3 4 5 6 7 6 7 6   8 2   3 4 5 6 7 6 7 6 7 6  8 2 9
+
+
 
 &nbsp;
