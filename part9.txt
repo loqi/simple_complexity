@@ -1,0 +1,22 @@
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=6761"> or previous page</a>
+
+<big>Back on page 4 regarding [math]O(n^2)[/math] I said, "little operations and fragments of operations are still operations, so in fact you are doing <em>something</em> exactly [math]n^2[/math] number of times." Attentive readers will have noticed I was playing a bit loose with my apples and oranges: "Running this algorithm against ten times more data will cause it to do about a hundred times more <em>half-compares,</em> and a hundred times more <em>tenth-of-a-swap</em> operations."
+<strong>It's time I come clean with my tiny little fib.</strong>
+
+Let's look at insertion sort:</big>
+
+<pre>1 function insertionSort(sortArray)
+2   for unsortedIndex in 1..(sortArray.length-1)
+3       rCursor = unsortedIndex
+4       lCursor = rCursor-1
+5       element = sortArray[rCursor]
+6       while rCursor > 0 and sortArray[lCursor] > element
+7           sortArray[rCursor--] = sortArray[lCursor--]
+8       sortArray[rCursor] = element
+9   return sortArray</pre>
+
+Like the earlier example selection sort, this code follows a triangular structure. The outer loop on line 2 considers each element except the first, walking forward to the right until it runs out of array. The inner loop at line 6 walks backward through the sorted region (everything to the left of the outer loop's index) shifting whatever it touches to the right by one position until it discovers the new home for the element. Line 8 overwrites the duplicate with the element and then the outer loop advances.
+
+We'll talk about best-case and worst-case analysis later. For now we can see that if the array is already sorted, line 7 will never run and line 8 overwrites each element with itself. If the array is in reverse order, the loop at line 6 iterates unsortedIndex number of times. This is a triangular algorithm. If the array begins in reverse order, line 7 is run once, then twice, then three times, until unsortedIndex reaches the last index.
+
+&nbsp;
