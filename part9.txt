@@ -69,15 +69,29 @@ Here, about two thirds of the line numbers are in bold, meaning that only a thir
 
 When running this sort against a 1,000,001-length reverse-sorted array, we'd have 6,000,003 non-bold line numbers plus another 1,000,001,000,000 bold line numbers, or 0.0006% of the lines executed are outside the inner loop. The precision of these numbers is too fine to bother with. Do we really care about the difference between those three extra lines out of six million? Or those seven million lines out of a trillion? If you prefer the English long scale, it's called a billion. If you're a math/science type it's unambiguously called [math]10^{12}[/math] or if you're a stickler for nine significant digits it's [math]1.00000700 \times 10^{12}[/math]. Nobody does that. It's just [math]10^{12}[/math]
 
-At small n values, we don't usually care about time complexity, since execution time approaches a small constant as n approaches zero. We only care when n gets big enough to cause us trouble. In mathematics, we talk about n approaching infinity, but in computer science, we hear that as n getting big enough to make us wait impractically long for our algorithm to complete execution.
+At small n values, we don't usually care about time complexity, since execution time approaches a small constant as n approaches zero. We only care when n gets big enough to threaten us with trouble. In mathematics, we talk about n approaching infinity. In computer science, the prase "as n approaches infinity" really means "as n gets big enough to threaten us with trouble in the expected execution context."
 
 <big><strong>Convergence</strong></big>
 
-The exact formula for triangular numbers is [math]n(n+1)/2[/math] and for square numbers is [math]n^2[/math] Let plot them both.
+The formula for the triangular function is [math]n(n+1)/2[/math] and for the square function is [math]n^2[/math]
 
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareCurves.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareCurves.png" alt="triangularSquareCurves" width="625" height="440" class="aligncenter size-full wp-image-12041" /></a>
 
+The triangular function is shown in green and the square function is in red. The violet curve is the triangular function multiplied by the constant 2. These functions are all divergent. It is easy to convince ourselves of this because as we go to the right, we need to draw progressively longer vertical lines span green to red or red to violet. For lexophiles, we say they are monotonically divergent.
 
+But these derivatives do not all diverge. Expressed in standard polynomial form, the three functions look like [math]n^2 + n[/math] , [math]n^2[/math] , [math]0.5n^2 + 0.5n[/math] , and their derivatives look like [math]2n + 1[/math] , [math]2n[/math] , [math]n + 0.5[/math] , respectively. Here are those three derivatives:
 
-In big O, they're both [math]O(n^2)[/math]
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareDeriv.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareDeriv.png" alt="triangularSquareDeriv" width="625" height="440" class="aligncenter size-full wp-image-12071" /></a>
+
+This is a better intuitive proof that the square and triangular functions are monotonically divergent. These are all lines; they never stop rising to the right; the parabolic curves never stop growing further apart at a linear rate. We interpret the height of the upper parabolic functions at any given n as the approximate total computational load for that n value. We interpret the height of the lower linear functions as the amount of additional work required to reach that n value from the n value just before it.
+
+Imagine a sort algorithm that traverses the entire array once per element in the array, meaning the outer and inner loop all traverse the entire array every time. Such a function would obviously have time complexity [math]O(n^2)[/math] because it's doing something [math]n^2[/math] number of times, plus some linear-time housekeeping before and after the inner loop, and some constant-time housekeeping before and after the outer loop. Because the triangular function's derivative is a line, it is possible to come up with a constant (2) and another constant (-1) to use as coefficients to transform [math]n+0.5[/math] into [math]2(n+0.5) - 1
+ = 2n[/math] -- the exact derivative of the square function.
+
+What a bunch of math mumbo jumbo. It means the bigger <em>array.length</em> gets, the closer the number of bold sixes plus bold sevens gets to <em>array.length squared.</em> In fact, if you count up all the line numbers, bold or not, you get a number that progressively closer to array.length squared as the array length grows.
+
+That is not to say that counting up all the lines a square or triangular algorithm executes always approaches the square of n. Counting lines works in the insertion sort example only because the inner loop is two lines long.
+
+As n rises, any quadratic-time algorithm always approaches some amount of computational work that approaches a proportion of n^2 number of unspecified .
 
 &nbsp;
