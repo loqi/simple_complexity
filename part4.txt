@@ -20,7 +20,7 @@ This brings us to another key point. Your algorithm doesn't need to do one discr
       biggestAt = 0
       <strong>for</strong> compareAt in 1..<strong>unsortedUpTo</strong>
           if sortArray[biggestAt] &lt;= sortArray[compareAt]
-            biggestAt = compareAt
+              biggestAt = compareAt
       swap sortArray[unsortedUpTo], sortArray[biggestAt]
       <strong>decrement unsortedUpTo</strong>
   return sortArray</pre>
