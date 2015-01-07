@@ -40,6 +40,5 @@ So here's how [math]O(n^2)[/math] can represent a different complexity from [mat
 
 In this context, the underlying meaning of the derivative is a description of how much work needs to be done per n. This page gives another perspective on the recurring theme that a quadratic-time operation must do a linear-time operation per n, a linear operation must do a constant-time operation per n, and a constant-time operation must do a zero-time operation per n. But this can take us far beyond the simple [math]O(n^k)[/math] formulation. Using derivatives we can unravel the most heinous big O functions to get a simpler complexity profile that itself runs in linear time. And when we have multiple independent variables in our big O, we can take the derivatives with respect to each of them to see the time complexity with respect to each linear vector.
 
-That's enough on derivatives. If any of that stuck, you're doing alright. If you don't really care about this page, you could've skipped it. If you think this page is awesome, then I think you are awesome. Now let's turn toward convergence.
-
+That's enough on derivatives. If any of that stuck, you're doing alright. If you don't really care about this page, you could've skipped it. If you think this page is awesome, then I think you are awesome. Now let's <a title="Simple Complexity 9" href="http://stickybits.azurewebsites.net/?p=11411">turn toward convergence.</a>
 &nbsp;
