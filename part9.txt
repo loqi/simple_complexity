@@ -1,44 +1,113 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 7" href="http://stickybits.azurewebsites.net/?p=4671"> or previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=6761"> or previous page</a>
 
-<big>On the previous page, I said we won't dive into derivatives here. It depends upon the meaning of the word 'here' here. <strong>Don't panic.</strong> You may not absorb everything on this page. This math discussion is here to provide insight into how complexity builds on itself. Read on to gain whatever value you can, but don't get bogged down. We'll get back to the code soon enough.</big>
+<big>Back on page 4 regarding [math]O(n^2)[/math] I said, "little operations and fragments of operations are still operations, so in fact you are doing <em>something</em> exactly [math]n^2[/math] number of times." Attentive readers will have noticed I was playing a bit loose with my apples and oranges: "Running this algorithm against ten times more data will cause it to do about a hundred times more <em>half-compares,</em> and a hundred times more <em>tenth-of-a-swap</em> operations."
 
-The derivative of a function is another function that describes the rate of change of the first function. Plotting a function [math]f(x)[/math] on a cartesian plane, we might interpret the derivative of that function [math]f'(x)[/math] as a second function that quantifies the continuously changing slope of the curve of the first function.
+<strong>It's time I come clean with my tiny little fib.</strong></big>
 
-Imagine using a pencil to plot a function on a piece of graph paper. If you carefully note the exact direction you are pushing the pencil at each moment, you will have a new function derived from the original function. By convention, the slope is quantified as rise over run, or how much upward change in pencil position is needed to keep pace with rightward movement of your pencil. If the pencil goes downward as it moves to the right, this is interpreted as a negative upward movement, and thus a negative slope. A very steep rise covers many rows of graph paper in just one column. The number of rows upward per single column rightward is the slope. A curve has a constantly changing slope, so the slope at any one point of that curve is defined by the linear direction the pencil is being pushed at that moment. The word 'curve' might be used to describe a function plotting even if it's a straight line, just to be confusing. Think of a line as the kind of curve that doesn't change direction. A function can never have a perfectly vertical or beyond vertical (overhanging) slope because this would make the function not a function. We won't dive into that here.
+<pre>1 function insertionSort(array)
+2   for unsortedIndex in 1..(array.length-1)
+3       rCursor = unsortedIndex
+4       lCursor = rCursor-1
+5       element = array[rCursor]
+6       while rCursor > 0 and array[lCursor] > element
+7           array[rCursor--] = array[lCursor--]
+8       array[rCursor] = element
+9   return array</pre>
 
-So how does this relate to algorithmic complexity analysis? The short answer is that the higher the derivative at any given <em>n</em> value, the more resource is needed to make forward progress to the next <em>n</em> value; end of discussion. Read on for a longer answer.
+As with selection sort, insertion sort follows a triangular execution pattern. The outer loop on line 2 considers each element except the first, walking forward to the right until it runs out of elements. The inner loop at line 6 walks backward through the sorted region (everything to the left of the outer loop's index) copying whatever it touches to the right by one position until it discovers the new home for the element. The effect is that all elements visited by the inner loop have been shifted, except the last one it visited, which is duplicated. Line 8 overwrites one of those duplicates with the currently considered element and then the outer loop advances to consider the next element in need of a new home.
 
-Recall this heuristic for identifying time complexity:
+We can see that if the array is already sorted, line 7 cannot be reached and line 8 overwrites each element with itself. If the array arrives in reverse order, the loop at line 6 iterates <em>unsortedIndex</em> number of times. This is a triangular algorithm. At most, line 7 runs once, then twice, then three times, and so on until the outer loop completes. Triangular algorithms run in [math]O(n^2)[/math] quadratic time -- same as square algorithms.
 
-When n is bigger by one, execution flow...
-... adds no additional operation: [math]O(1)[/math] constant time
-... adds one constant-time operation: [math]O(n)[/math] linear time
-... adds one linear-time operation: [math]O(n^2)[/math] quadratic time
-... adds one quadratic-time operation: [math]O(n^3)[/math] cubic time
+Really?
 
-Here is a plotting of the four functions defining those four time complexities: [math]1,\ n,\ n^2,\ n^3[/math]
+Let's look at how many times line 7 is run. Given an input array that arrives in reverse-sorted order, this table shows the line numbers in the sequence they are executed.
 
-<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/visual_derivative.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/visual_derivative.png" alt="visual_derivative" width="625" height="440" class="aligncenter size-full wp-image-10181" /></a>
+<table>
+<tr><th>input array</th><th>line execution sequence</th></tr>
+<tr><td>[]</td><td><small>1 2 9</small></td></tr>
+<tr><td>[12]</td><td><small>1 2 9</small></td></tr>
+<tr><td>[12, 10]</td><td><small>1 2 3 4 5 6 <strong>7 6</strong> 8 2 9</small></td></tr>
+<tr><td>[12, 10, 9]</td><td><small>1 2 3 4 5 6 <strong>7 6</strong> 8 2 3 4 5 6 <strong>7 6 7 6</strong> 8 2 9</small></td></tr>
+<tr><td>[12, 10, 9, 7]</td><td><small>1 2 3 4 5 6 <strong>7 6</strong> 8 2 3 4 5 6 <strong>7 6 7 6</strong> 8 2 3 4 5 6 <strong>7 6 7 6 7 6</strong> 8 2 9</small></td></tr>
+</table>
 
-This figure demonstrates a progression of derivatives. Have a look at the stair steps along the linear function's blue line. Each step forward along the linear function requires a proportional step upward to stay with the line. The blue line rises at a constant rate with respect to n. Those stairs grow taller at the same rate that the gold constant function rises: which is to say, they stay the same forever. With the quadratic function in violet, each step on the staircase is taller than the previous step, and that change in height grows at a constant rate. <em>"I know an old lady who swallowed a fly..."</em> The parabola rises at a rate that rises at a rate that doesn't change. The green cubic function rises at a rate that rises at a rate that rises at a rate that doesn't change.
+If we run this code against an array of 101 reverse-sorted elements, line 7 gets executed exactly 5050 times, lines 3 4 5 8 exactly 100 times, and line 9 exactly once.
 
-The exact derivatives of those four functions are [math]0,\ 1,\ 2n,\ 3n^2[/math] respectively. In big O, that would be [math]O(0),\ O(1),\ O(n),\ O(n^2)[/math] respectively. Those are the original functions shifted by one position. This represents the principle that the derivative of a big-O function quantifies the additional operations of each increment of the n value. A quadratic-time operation is a linear-time operation, itself run in linear time: [math]O(n^2) = O(n) * O(n)[/math] If you identify a quadratic-time operation in your code that, through looping or recursion runs in linear time -- runs some number of times in proportion to your n value -- then taken together the whole piece of code runs in cubic time. Alternatively, if you have a linear-time operation run in quadratic time, you also have a cubic time complexity since multiplication is commutative. [math]O(n^2) * O(n) = O(n^2 * n) = O(n^3)[/math]
+This line execution pattern looks like a polynomial to me. We can approximate the number of lines executed something like this, where n is the length of the array minus one:
 
-Continuous math is nice for smooth curve visualization, but discrete math is more appropriate to algorithmic analysis. Let's see [math]f(n) = n^2[/math] as a bar graph.
+[math]0.5n^2 + 56n + 3[/math]
 
-<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/discrete_nSquared.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/discrete_nSquared.png" alt="discrete_nSquared" width="600" height="435" class="aligncenter size-full wp-image-10191" /></a>
+For an n of 1000, it would look more like this:
 
-In continuous math, there is an infinite density of numbers; between any two numbers there are more numbers. In discrete math, we deal in integers. In this context, we might interpret a derivative of a function as the stepwise resolution as our <em>n</em> value varies by its smallest possible change, i.e. increments or decrements by one.
+[math]0.5n^2 + 506n + 3[/math]
 
-This visual representation of the quadratic function shows that for each increment of <em>n</em>, the computational load rises in linear fashion. When you have an n-loop nested within an n-loop, the innermost code is run in proportion to [math]n^2[/math] number of times. A slightly bigger n value causes the inner loop to iterate slightly longer, and to be run slightly more times. This is represented geometrically by the inset square. Each successive stripe wrapping around the inset square is longer than the previous stripe by two units, one for each dimensional aspect. The formula of each line shown on the right quantifies the load associated with each increment of <em>n</em>. This has the effect of making the slope of each successive line steeper by a cumulative constant, creating a steepening parabolic function.
+Of course, this is not really how math works. When n is known to be 100 or 1000 these two polynomials are constants:
 
-Let's take a quick look into the degenerate end of this progression. The derivative of [math]f(n) = 1[/math] is [math]f'(n) = 0[/math] So how can we interpret an [math]O(0)[/math] time complexity? Sticking with our inductive progression, we could say this zero-time operation not only does no more work for a bigger n, but does no work at all for any n. That is, an operation smaller than invoking a function that immediately returns; smaller than a single no-op instruction; an operation too small to take any execution time at all. A perfectly zero-length operation. What's the derivative of [math]f(n) = 0[/math] ? Since zero is a constant, that would be [math]f'(0) = 0[/math] Stated in words, a zero-time operation does exactly zero computational work in all circumstances. In a normal context it's silly to talk about an [math]O(0)[/math] zero-time operation, because it's always exactly the same null operation: a series of zero instructions that aren't even there. Mathematicians like to be complete and look at the degenerate case, so there you go. You're a mathematician.
+[math]0.5(100^2) + 56(100) + 3 = 5000 + 5600 + 3 = 10,603[/math]
+[math]0.5(1000)^2 + 506(1000) + 3 = 500,000 + 506,000 + 3 = 1,006,003[/math]
 
-So here's how [math]O(n^2)[/math] can represent a different complexity from [math]O(n^3)[/math] despite the fact that both 2 and 3 are constants. Big O sums behave differently from big O products. [math]O(n) + O(n) + ... + O(n)[/math] for fifty terms is equal to [math]O(50n) = O(n)[/math] because no matter how big your <em>n</em> grows, the number fifty always stays the same. Doubling n from a big value doubles the resolution of the expression. On the other hand, [math]O(n) + O(n) + ... + O(n)[/math] for <em>n</em> number of terms (or [math]n/50[/math] or [math]n/1000[/math] terms) is equal to [math]O(n^2)[/math] because the number of terms grows in proportion to the <em>n</em> value. Doubling n from a big value quadruples the resolution of the expression.
+We want a general function to apply to all n values, not a different function for every n. What are these expressions meant to quantify anyway? Number of lines of code executed? Not all lines are created equal. And what's it all for? Time complexity doesn't care how big each step is, only how many of them there are. But why? <em>Why are most of the lines of insertion sort ignored by the [math]O(n^2)[/math] expression, and how is it okay to turn a triangle into a square?</em>
 
-[math]O(n) * O(n) = O(n^2)[/math] represents a linear number of linear-time operations. The derivative of [math]50n[/math] and the derivative of [math]n/1000[/math] are both flatlines -- they're parallel lines. As n grows, they stay side-by-side. The derivative of [math]n^3[/math] is a parabola and the derivative of [math]n^2[/math] is a line. The bigger n gets, the further apart these derivative functions spread. In other words, as n grows the original functions grow less parallel, and thus more different.
+An explanation is beginning to form graphically in the table of line execution above. The iterative lines of the inner loop are in bold; The top two lines contain no bold at all, and as n increases, we see progressively more bold in the table. When the input array is ten reverse-sorted elements, execution flow looks like this:
 
-In this context, the underlying meaning of the derivative is a description of how much work needs to be done per n. This page gives another perspective on the recurring theme that a quadratic-time operation must do a linear-time operation per n, a linear operation must do a constant-time operation per n, and a constant-time operation must do a zero-time operation per n. But this can take us far beyond the simple [math]O(n^k)[/math] formulation. Using derivatives we can unravel the most heinous big O functions to get a simpler complexity profile that itself runs in linear time. And when we have multiple independent variables in our big O, we can take the derivatives with respect to each of them to see the time complexity with respect to each linear vector.
+<small>1 2 3 4 5 6 <strong>7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6 7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6</strong>
+8 2 3 4 5 6 <strong>7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6</strong>
+8 2 9</small>
 
-That's enough on derivatives. If any of that stuck, you're doing alright. If you don't really care about this page, you could've skipped it. If you think this page is awesome, then I think you are awesome. Now let's <a title="Simple Complexity 9" href="http://stickybits.azurewebsites.net/?p=11411">turn toward convergence.</a>
+Here, about two thirds of the line numbers are in bold, meaning that only a third of the lines are executed outside the innermost loop. Each time we add another array element, we add another [math]6[/math] non-bolds and another [math]2(n-1)[/math] bolds.
+
+When running this sort against a 1,000,001-length reverse-sorted array, we'd have 6,000,003 non-bold line numbers plus another 1,000,001,000,000 bold line numbers, or 0.0006% of the lines executed are outside the inner loop. The precision of these numbers is too fine to bother with. Do we really care about the difference between those three extra lines out of six million? Or those seven million lines out of a trillion? If you prefer the English long scale, a trillion is called a billion. If you're a math/science type it's unambiguously called [math]10^{12}[/math] or if you're a stickler for nine significant digits it's [math]1.00000700 \times 10^{12}[/math]. Nobody does that. It's just [math]10^{12}[/math] or [math]1.00 \times 10^{12}[/math]
+
+At small n values, we don't usually care about time complexity, since execution time approaches a small constant as n approaches zero. We only care when n gets big enough to threaten us with trouble. In mathematics, we talk about n approaching infinity. In computer science, we mentally translate such phrases to "as n gets big enough that we risk over-consuming the resource we're concerned with in the expected execution context."
+
+<big><strong>Convergence</strong></big>
+
+The formula for the triangular number function is [math]n(n+1)/2[/math] and for the square function is [math]n^2[/math]
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareCurves.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareCurves.png" alt="triangularSquareCurves" width="625" height="440" class="aligncenter size-full wp-image-12041" /></a>
+
+The triangular number function is shown in green and the square function is in red. The violet curve is the triangular number function multiplied by the constant 2. These functions are all divergent. It is easy to convince ourselves of this because as we go to the right, we need to draw progressively longer vertical lines to span green to red or red to violet. For us lexophiles, we say they are monotonically divergent, meaning there is no place where they stop spreading apart as we go to the right.
+
+But these derivatives do not all diverge. Expressed in standard polynomial form, the three functions look like [math]n^2 + n[/math] , [math]n^2[/math] , [math]0.5n^2 + 0.5n[/math] , and their derivatives look like [math]2n + 1[/math] , [math]2n[/math] , [math]n + 0.5[/math] , respectively. Here are those three derivatives:
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareDeriv.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/triangularSquareDeriv.png" alt="triangularSquareDeriv" width="625" height="440" class="aligncenter size-full wp-image-12071" /></a>
+
+This is a better intuitive proof that the square and triangular number functions are monotonically divergent. These are all lines; they never stop rising to the right; the parabolic curves never stop growing further apart at a linear rate. We interpret the height of the upper parabolic functions at any given n as the approximate total computational load for that n value. We interpret the height of the lower linear functions as the amount of additional work required to reach that n value from the n value just before it. Imagine the vertical spacing between the red and violet parabola as the next sequence of <small>8 2 3 4 5 6 <strong>7 6 7 6 ...</strong></small> and the vertical space between the red and violet line as the last pair of bold <small><strong>7 6</strong></small> numbers of that sequence -- the additional inner iteration that wasn't there last time through the outer iteration.
+
+This triangular insertion sort has the same time complexity as a square algorithm that traverses the entire array once per element in the array, meaning the outer and inner loop all traverse the entire array every time. Such an algorithm would obviously have time complexity [math]O(n^2)[/math] because it's doing something [math]n^2[/math] number of times, plus some linear-time housekeeping before and after the inner loop, and some constant-time housekeeping before and after the outer loop. Because the triangular number function's derivative is a line, it is possible to come up with a constant (2) and another constant (-1) to use as coefficients to steepen and shift the line down [math]2(n+0.5) - 1 = 2n[/math] -- the exact derivative of the square function.
+
+What a load of math mumbo jumbo. It means the bigger <em>array.length</em> gets, the closer the number of bold sixes plus bold sevens gets to <em>array.length squared.</em> In fact, if you count up all the line numbers, bold or not, you get a number that progressively closer to array.length squared as the array length grows. That is not to say that counting up all the lines executed by any square or triangular algorithm always approaches the square of n. Counting lines works in this insertion sort example only because the inner loop is two lines long and the square function is approximately double the triangular number function. As n rises, any quadratic-time algorithm always approaches some amount of computational work that approaches a proportion of [math]n^2[/math] number of constant-time operations of unspecified size. Counting lines here is just a proxy for counting that unspecified quantity of computational work.
+
+Most humans arrive from the factory with a geometry co-processor as standard equipment. We understand numbers and statistics more intuitively when represented as geometric shapes. Let's leverage that and see the line numbers of insertion sort in an even more graphical form.
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/insertionSortSquareTriangle.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/insertionSortSquareTriangle.png" alt="insertionSortSquareTriangle" width="725" height="700" class="aligncenter size-full wp-image-12551" /></a>
+
+Constant-time operations are in green, linear-time operations in red, and quadratic-time in blue. These line numbers serve as a proxy for some uniform amount of computational work. We can meaningfully do this because each individual line of code in the insertion sort example is itself a constant-time operation. If some line is an especially expensive constant-time operation, we can just imagine a wider column for than line number, but it doesn't really change anything once n gets big enough to matter. Lines 2 and line 6 set up loops. The associated initialization is represented here separate from the loop iteration, so these line numbers appear in two different colors. I segregated the sixes from the sevens and inverted the rows of the sixes so they're in a squarish shape. The 6 and 7 in this diagram represent line numbers, but they can more precisely be read as "the first and second half of the work done per iteration of the inner loop".
+
+Thinking in this way, we don't have to care about lines of code or CPU cycles or other realtime execution elements. We only care that there is some amount of work than scales as a function of our n value and that function converges on the exact quadratic function as n gets big. When n is zero or one, green dominates over the tiny number of operations. Only in very rare circumstances do we care about the time it takes to run three little lines of code. When n is one or two, the quadratic-time operations are very much out of proportion to [math]n^2[/math]. Zero is off by an infinite factor from [math]1^2[/math] ; two is only half of [math]2^2[/math] ; six is only two thirds of [math]3^2[/math] ; but these numbers are just too tiny to care about. Once n reaches the high single digits, the blue region dominates over red and the density of line numbers in the blue square becomes almost perfectly consistent. [math]1*2\ =\ 50\%\ of\ 2^2[/math] but [math]9*10\ =\ 90\%\ of\ 10^2[/math] and [math]99*100\ =\ 99\%\ of\ 100^2[/math]
+
+Here's what it looks like when n is some arbitrarily large number, like a thousand or a billion:
+
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/insertionSortSquareTriangleHuge.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/12/insertionSortSquareTriangleHuge.png" alt="insertionSortSquareTriangleHuge" width="508" height="501" class="aligncenter size-full wp-image-12421" /></a>
+
+The total number of lines executed including the red and green ones would be about [math]10^6[/math] or [math]10^{18}[/math] or whatever: pretty much exactly [math]n^2[/math].
+
+So this brings us back to the perfectly serviceable traditional explanation I pushed aside on page 4: only the degree of a polynomial makes a significant contribution to the resolution of the function as n approaches infinity. The green constant and red linear areas shrink to insignificance and the blue quadratic area becomes essentially a perfect square once n gets big enough for any of this to matter. When we say this is an [math]O(n^2)[/math] algorithm, the thing that's being quantified remains unspecified. It's some amount of constant-time computational work represented on this page by sixes and sevens. And that's why we can discard any constant coefficients as well, leaving us with a bare [math]n^2[/math] in the big O expression.
+
+<big>I hope at this point you're more bored than confused.
+
+Here's the summary.
+
+<strong>The function in a big O expression quantifies the number of computational steps, usually with respect to a variable n. Those steps can be any size, but they are all the same size. At small n values, the steps might not be consistent in size or number. At big n values, the size of the steps converge on a constant, and the number of steps converge on the big O function. The bigger the n value, the more truthy these statements become.</strong>
+
+All the analysis on this page is for the worst case of insertion sort. In the best case, insertion sort runs in linear time which can be visualized as running a few sixes and sevens from each row along the diagonal boundary in the blue square. We go into <a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=2701">best case and worst case</a> next.
+</big>
+
 &nbsp;

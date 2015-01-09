@@ -14,7 +14,7 @@ The green curve is a flattening (quasi-constant) function. As the scale of the d
 
 The blue function curve has the opposite property. It approaches vertical as the data scale rises, so the bigger your data, the steeper the line. It is unfeasible to apply such an algorithm to any but the smallest of data sets. Even so, these algorithms have a place in computer science. In some cases it's the only known way to solve a particular problem, or worse, the rigorously proven optimal solution to a problem. In other cases, you may actually <em>want</em> a computationally expensive algorithm, such as with cryptographic functions.
 
-Referring to the graph one more time, note the body of the "fish" on the left end. The functions switch places at an intersection point. What's steep and high at the right is shallow and low on the left, and vice-versa. This fact can be exploited in your algorithm design. Bookmark this thought, I go deeper into it in later pages.
+Referring to the graph one more time, note the body of the "fish" on the left end. The functions switch places at an intersection point. What's steep and high at the right is shallow and low on the left, and vice-versa. This fact can be exploited in your algorithm design. Bookmark this thought, I go deeper into it later in this series.
 
 [math]O(1)[/math] algorithms are said to run in <em>constant time. </em>Constant time complexity graphs to a perfectly horizontal line, so they're the <em>most</em> flattening of all flattening algorithms.
 

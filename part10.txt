@@ -1,10 +1,11 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=11411"> or previous page</a>
 
-<big><strong>"Best case, worst case, average case" -- what do they mean?</strong> These terms don't describe your algorithm. They don't describe the size of the N value. They describe the <em>initial state</em> your algorithm is asked to operate with. In other words, the most convenient and least convenient possible arrangement of input data for your particular algorithm.</big>
+<big><strong><em>Best case, worst case, average case</em> -- how do they work?</strong> These terms don't describe your algorithm. They don't describe the size of the N value. They describe the <em>initial state</em> your algorithm is asked to operate with. In other words, the most convenient and least convenient possible arrangement of input data for your particular algorithm.</big>
 
 If it always eventually produces the proper behavior (output) for any valid initial state (input), your algorithm is said to be <em>correct.</em> But some algorithms are more equal than others. Some algorithms maintain high performance even when faced with the most inconvenient possible data. This situation is described as the worst case time complexity with respect to whatever resource you're concerned with (CPU time). So one algorithm might have a flatter worst-case time complexity profile than another's worst-case profile.
 
 Let's revisit the selection sort pseudocode from earlier.
+
 <pre><strong>unsortedUpTo</strong> = <strong>array.length</strong> - 1
 loop (<strong>array.length</strong> - 1) times
   biggestAt = 0
@@ -14,7 +15,8 @@ loop (<strong>array.length</strong> - 1) times
   swap elements (unsortedUpTo, biggestAt)
   decrement unsortedUpTo
 return array</pre>
-As it stands, it remembers where the sorted region begins, which prunes out effectively half the work. Even so, it's [math]O(n^2)[/math] polynomial time because there's an array.length loop nested inside another array.length loop. Recall that we could think of this as executing a triangular number of operations, or we could think of it as a square number of smaller operations.
+
+As it stands, this selection sort remembers where the sorted region begins, which prunes out effectively half the work. Even so, it's [math]O(n^2)[/math] polynomial time because there's an array.length loop nested inside another array.length loop. Recall that we could think of this as executing a triangular number of operations, or we could think of it as a square number of smaller operations.
 
 There's nothing in there to prune out work when we find goodies in the data, so it runs through the whole workload every time. The best-case and worst-case time complexity of this algorithm are identical.
 
@@ -53,7 +55,7 @@ This example shows an insignificant amount of extra work for a pretty good payof
 
 So what is meant by an unqualified big O expression?
 
-Unless we say otherwise, it's assumed our complexity profile describes the <em>time</em> complexity when running against the <em>worst</em> case initial state. Worst-case data can be just as unlikely as best-case data, but we care more about it because we want to harden our designs against failure.
+Unless we say otherwise, it's assumed our complexity profile describes the <em>time</em> complexity when running against the <em>worst</em> case initial state. Worst-case data can be just as unlikely as best-case data, but we care more about it because we want to harden our designs against failure.
 
 In the case of both our versions of selection sort, that would be when it's asked to sort a reverse-sequence array. In that case, it has to do every single compare, assign, and swap that is possible for the algorithm to do. Since only the best-case complexity of version 2's is something other than [math]O(n^2)[/math] our function runs in polynomial time in both the worst and average cases.
 
@@ -61,4 +63,109 @@ Average case is a bit slippery. What does that really mean? With a sorting algor
 
 For this reason, I prefer the term <em>typical case</em> over <em>average case.</em> It less ambiguously conveys we're talking about data characteristics likely to be encountered in real runs. I see what I did there. I've pushed the ambiguity out by one level. What is typical data? I could tell you, but it would cost you. Or you could tell me, but it would cost you. It takes resources to find out. Sometimes you can get by with a SWAG -- scientific wild-ass guess. Sometimes you just have to operate in the dark. Do your best with what you have when you have it.
 
-Next, it's time for a bit of math they never quite gave you in school.
+That's a great reason to assume the worst in our big O expressions. It's just easier. It's often rather difficult to identify typical conditions of data we don't get to see. It's much easier to identify the worst possible arrangement of data for our algorithm to deal with. It's also safer. Worst-case data might be more common than we might assume. So we plan for the worst and hope for the best.
+
+However it's not always appropriate to think only in terms of worst case complexity. I'll illustrate this with quicksort.
+<pre> 1 function quicksort(array)
+ 2   return quicksortRegion(array, 0, array.length-1)
+
+ 4 function quicksortRegion(array, lo, hi)
+ 5   return array unless lo < hi
+ 6   pivIndex = qsPartition(array, lo, hi)
+ 7   quicksortRegion(array, lo, pivIndex-1)
+ 8   quicksortRegion(array, pivIndex+1, hi)
+ 9   return array
+
+11 function qsPartition(array, lo, hi)
+12   swap(array, choosePivot(array, lo, hi), hi)
+13   pivVal = array[hi]
+14   i = lo  ;  j = hi - 1
+15   loop
+16       i++ while array[i] < pivVal
+17       j-- while i < j and array[j] > pivVal
+18       exit loop unless i < j
+19       swap(array, i, j)
+20   swap(array, i, hi)
+21   return i
+
+23 function choosePivot(array, lo, hi)
+24   return lo
+</pre>
+
+The above quicksort algorithm has quadratic [math]O(n^2)[/math] time complexity in the worst case, and linearithmic [math]O(n\ log\ n)[/math] time complexity in the best case. Space complexity is supposed to be [math]O(log\ n)[/math] but might be as bad as [math]O(n^2)[/math]. The call stack maxes out at some proportion of [math]log_2\ n[/math] depth in the recursion and each recursion adds only a few local variables, constant in number, but under some circumstances, the recursion depth is as bad as the execution time in the worst case.
+
+Under what circumstances would we see this worst-case performance?
+
+This pivot strategy works great if the array comes in with high stochasticity, but what if the array comes already sorted, either ascending or descending? That would be a worst-case initial state. This causes every pivot to be near one end or the other, resulting in all radically lopsided partitions. If pivots fall close to the middle, you get a nice logarithmic pattern of recursion where each call is against half as much data as the parent call. If it's close to one end, the short half finishes in constant time and the long half has barely made any progress. In effect, it'll run like insertion sort, but with more work per step and quadratically growing call stack. Given a heavily biased initial state that will happen often, causing the whole thing to run in quadratic time. Doubling the biased array length will quadruple the running time.
+
+Some variants of quicksort use exactly this pivot strategy, but to avoid the rather common case where the data arrives somewhat pre-sorted, it is first shuffled before quicksorting it, like so:
+
+<pre>function quicksort(array)
+  return quicksortRegion(shuffle(array), 0, array.length-1)
+</pre>
+
+That initial shuffle solves many problems. A good shuffling algorithm runs in linear time [math]O(n)[/math] and creates a perfectly unbiased result. With this adjustment, the time complexities are best [math]O(n\ log\ n)[/math], typical [math]O(n\ log\ n)[/math] and worst [math]O(n^2)[/math].
+
+The worst case is still quadratic. This illustrates an important point. Although the worst case is just as bad as before, it's much less likely to occur. Previously, a worst-case initial state would be an array coming in already sorted, which is a fairly common use case. Now the worst-case initial state is an array and a pseudorandom number generator arriving with an initial state such that a mostly sorted array results <em>after</em> the shuffling. This is still a probability greater than zero, so it makes the cut for worst-case complexity rating. However, if we assume nobody is playing a trick on us, the probability of an unbiased shuffle generating a perfect sort is [math]1/{n!}[/math] For any significant n value, this is effectively a zero probability event. There is much more than one configuration of an almost-sorted array, and this would give almost as poor a performance. However such combinations are at a tail of a normal distribution bell curve. As the length of the array grows, the likelihood of falling on the left or right tail of the curve approaches zero as well.
+
+Statistically, this shuffling quicksort will yield consistent performance results every time it is run against a long array. By understanding the algorithm, we are able to make a reasonable determination that the worst-case performance is of little concern to us, and only pay attention to the average case here.
+
+But wait, shuffling the array not only protects us from the worst case, it also protects us from the best case. Surely there must be a way to turn the nearly-sortedness of the initial array to our advantage, not a liability. Here's a different pivot strategy.
+
+<pre>function quicksort(array)
+  return quicksortRegion(array, 0, array.length-1)
+
+// Median of three: middle, random left, random right
+function choosePivot(array, lo, hi)
+  midIx = floor( (lo+hi) / 2 )
+  leftIx = randomInteger(1+midIx-lo) + lo
+  righIx = randomInteger(hi-midIx) + 1 + midIx
+  if array[leftIx] <= array[midIx]
+      return midIx if array[midIx] <= array[rightIx]
+      return rightIx if array[leftIx] < array[rightIx]
+      return leftIx
+  return midIx if array[midIx] >= array[rightIx]
+  return rightIx if array[leftIx] > array[rightIx]
+  return leftIx</pre>
+
+We are no longer shuffling the array before sorting it. Instead we use the pivot strategy of identifying the median between the middle element, and an element randomly chosen from ahead and behind the middle one, giving priority to the middle one in the case of a tie. This gives us a few advantages over a fully random strategy. If the array is already nearly sorted, it runs much faster. The best case is still linearithmic, but it's a faster linearithmic because the quicksortRegion function does almost no writing, only rapid forward scanning in the tight while loop (line 16). We can think of this as [math]n\ log\ n[/math] steps, where nearly all the steps are extremely tiny. Remember, time complexity is not the same as execution time, so not all linearithmic complexities are created equal.
+
+By introducing randomness, we guard against some joker handing us data carefully crafted to give our algorithm a hard time. It's not as if we forsee this as a major possibility, but it's certainly higher likelihood than one in [math]{n!}[/math] event. Actually, one of us might be that very joker. It's very likely we haven't thought of a fairly common use case that will consistently bog down our algorithm. Introducing randomness gives us assurance against our own oversight.
+
+We still have the worst case running in quadratic time. But now the likelihood is just as remote as with the shuffle technique for that worst case performance. In the best case, we get presorted data and our partitions are consistently at the middle, and we have very few swaps, mostly just scans.
+
+What happens when nearly all the elements are equal? In that case, the loop on lines 15..19 flings every element it sees into the other half of the partition. The effect is that there's an inordinate number of swaps taking place, but the partitions will consistently be well balanced, giving [math]O(n\ log\ n)[/math] time and space complexity because each recursion is against a run half as long as its parent recursion.
+
+We can make a variant of quicksort that runs in linear [math]O(n)[/math] time and linear space when given an array of nearly all identical elements.
+
+<pre>function quicksort(array)
+return quicksortRegion(array, 0, array.length-1)
+
+function quicksortRegion(array, lo, hi)
+  return array unless lo < hi
+  innerLo, innerHi = dutchFlagify(array, lo, hi)
+  quicksortRegion(array, lo, innerLo-1)
+  quicksortRegion(array, innerHi+1, hi)
+  return array
+
+function dutchFlagify(array, lo, hi)
+  swap(array, choosePivot(array, lo, hi), lo)
+  pivVal = array[lo]
+  innerLo = lo
+  innerHi = hi
+  i = innerLo+1
+  while i <= innerHi
+      if array[i] < pivVal
+          swap(array, innerLo++, i++)
+      else if array[i] > pivVal
+          swap(array, innerHi--, i)
+      else
+          i++
+  return innerLo, innerHi
+</pre>
+
+Here the partition function is called dutchFlagify and instead of flinging the pivot-tying elements across the middle, it collects them into a stripe, which might be very wide indeed. Once placed, these elements are in their final position and are not touched again for the duration of the sort. This version of quicksort runs in linear time in the case when the elements are mostly equal. In such a case, it's likely that the first or second pivot choice will hit the heavily repeated element and then they will be gathered together in a single traversal of the array, leaving only a few stragglers at either end.
+
+The cost of this version is that there's more work in cases where there's not much repetition of elements. This innermost loop is slightly more expensive per element, although not much more expensive. It is probably a better general-purpose variant of quicksort, but as stated throughout this series, if you know something about the data your algorithm is likely to see, you can make intelligent decisions in tailoring your code to your data. Honestly though, the runtime difference between any of these variants of quicksort is negligible for most circumstances you'll be putting them to. Just go with the Dutch flag partition against the median of three pivot unless you can articulate a specific reason for something else.
+
+So that's a twofer. You get a lesson on best- and worst-case time complexity and a lesson on the quicksort algorithm. I'm going to apply these lessons on the next page. As promised back on page two, it's time to see how to pair elementary algorithms with sophisticated algorithms to exploit the best of what each can offer the other.
