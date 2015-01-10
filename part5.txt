@@ -51,7 +51,7 @@ These two sets of heuristics can be combined to analyze the same piece of code. 
  7    left = sortArray.copy(0..(middleIx-1))
  8    right = sortArray.copy(middleIx..end)
  9
-10    # Recrusively sort the two shorter arrays
+10    # Recursively sort the two shorter arrays
 11    inPlaceMergeSort(left)
 12    inPlaceMergeSort(right)
 13
