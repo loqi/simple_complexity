@@ -139,11 +139,11 @@ What happens when nearly all the elements are equal? In that case, the loop on l
 We can make a variant of quicksort that runs in linear [math]O(n)[/math] time and linear space when given an array of nearly all identical elements.
 
 <pre>function quicksort(array)
-return quicksortRegion(array, 0, array.length-1)
+  return quicksortRegion(array, 0, array.length-1)
 
 function quicksortRegion(array, lo, hi)
   return array unless lo < hi
-  innerLo, innerHi = dutchFlagify(array, lo, hi)
+  [innerLo, innerHi] = dutchFlagify(array, lo, hi)
   quicksortRegion(array, lo, innerLo-1)
   quicksortRegion(array, innerHi+1, hi)
   return array
@@ -151,17 +151,14 @@ function quicksortRegion(array, lo, hi)
 function dutchFlagify(array, lo, hi)
   swap(array, choosePivot(array, lo, hi), lo)
   pivVal = array[lo]
-  innerLo = lo
+  i = innerLo = lo
   innerHi = hi
-  i = innerLo+1
-  while i <= innerHi
+  while ++i <= innerHi
       if array[i] < pivVal
-          swap(array, innerLo++, i++)
+          swap(array, innerLo++, i)
       else if array[i] > pivVal
-          swap(array, innerHi--, i)
-      else
-          i++
-  return innerLo, innerHi
+          swap(array, innerHi--, i--)
+  return [innerLo, innerHi]
 </pre>
 
 Here the partition function is called dutchFlagify and instead of flinging the pivot-tying elements across the middle, it collects them into a stripe, which might be very wide indeed. Once placed, these elements are in their final position and are not touched again for the duration of the sort. This version of quicksort runs in linear time in the case when the elements are mostly equal. In such a case, it's likely that the first or second pivot choice will hit the heavily repeated element and then they will be gathered together in a single traversal of the array, leaving only a few stragglers at either end.

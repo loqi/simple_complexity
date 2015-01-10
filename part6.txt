@@ -4,7 +4,7 @@
 
 Let's have another look at that top-down merge sort it pseudocode:</big>
 
-<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/topDownMergeColorCode.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/11/topDownMergeColorCode.png" alt="topDownMergeColorCode" width="650" height="820" class="aligncenter size-full wp-image-9531" /></a>
+<a href="http://stickybits.azurewebsites.net/wp-content/uploads/2015/01/topDownMergeColorCode.png"><img src="http://stickybits.azurewebsites.net/wp-content/uploads/2015/01/topDownMergeColorCode.png" alt="topDownMergeColorCode" width="650" height="820" class="aligncenter size-full wp-image-13411" /></a>
 
 Green signifies [math]O(1)[/math] constant time.
 Blue is [math]O(\ sortArray.length\ )[/math] linear time.
