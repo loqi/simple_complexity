@@ -1,0 +1,6 @@
+<big><strong>Given a big enough n value, any [math]O(n log n)[/math] algorithm will outperform any [math]O(n^2)[/math] algorithm. When n is small, the reverse is often true -- sometimes by a sizable margin.</strong> This fact can be exploited to optimize performance.
+
+Recall this simplified conceptual model:</big>
+
+
+
