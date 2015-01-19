@@ -107,7 +107,7 @@ Here's the summary.
 
 <strong>The function in a big O expression quantifies the number of computational steps, usually with respect to a variable n. Those steps can be any size, but they are all the same size. At small n values, the steps might not be consistent in size or number. At big n values, the size of the steps converge on a constant, and the number of steps converge on the big O function. The bigger the n value, the more truthy these statements become.</strong>
 
-All the analysis on this page is for the worst case of insertion sort. In the best case, insertion sort runs in linear time which can be visualized as running a few sixes and sevens from each row along the diagonal boundary in the blue square. We go into <a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=2701">best case and worst case</a> next.
+All the analysis on this page is for the worst case of insertion sort. In the best case, insertion sort runs in linear time which can be visualized as running a few sixes and sevens from each row along the diagonal boundary in the blue square. We go into <a title="Simple Complexity 10" href="http://stickybits.azurewebsites.net/?p=2701">best case and worst case</a> next.
 </big>
 
 &nbsp;

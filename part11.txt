@@ -1,10 +1,18 @@
-<big><strong>Given a sufficiently high n value, any [math]O(n\ log\ n)[/math] algorithm will outperform any [math]O(n^2)[/math] algorithm. When n is small, the reverse is often the case.</strong> In such cases, there will exist (loosely) a critical n value, below which the slower algorithm is faster. This fact can be exploited to optimize performance -- sometimes saving a surprising amount of actual execution time.
+<big><strong>Given a sufficiently high n value, any [math]O(n\ log\ n)[/math] algorithm will outperform any [math]O(n^2)[/math] algorithm. When n is small, the reverse is often the case.</strong> In such cases, there will exist (loosely) a critical n value, below which the slower algorithm is faster and the faster algorithm is slower. This fact can be exploited to optimize performance -- sometimes saving a sizable amount of actual execution time.
 
 Recall this simplified conceptual model:</big>
 
 <a href="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png"><img class="aligncenter size-full wp-image-1041" src="http://stickybits.azurewebsites.net/wp-content/uploads/2014/08/threeCurvesTransparent1.png" alt="threeCurvesTransparent" width="575" height="385" /></a>
 
-These curves represent three categories of functions that can appear in a big O expression. Quadratic time [math]O(n^2)[/math] is a "steepening" class algorithm, while linearithmic time [math]O(n\ log\ n)[/math] is what I'm calling a "proportional" class algorithm. We are taking advantage of the smaller n values at the left of the plotting, where proportional algorithms tend to be more expensive than steepening algorithms.
+These curves represent three categories of functions that can appear in a big O expression. A quadratic-time algorithm [math]O(n^2)[/math] is in the "steepening" class, while a linearithmic-time algorithm [math]O(n\ log\ n)[/math] is what I'm calling a proportional class algorithm. We are taking advantage of the smaller n values at the left of the plotting, where proportional algorithms tend to be more expensive than steepening algorithms.
+
+Here is plotted a representative qudratic and linearithmic function:
+
+
+
+Real data produces much more chaotic performance profiles than these smooth, well behaved curves. This is a simplified model, loosely illustrating the relationship between work and results when comparing different classes of algorithms.
+
+expected number of , given some stochastic data set of size n. Given this simplified model, can you identify the ideal n value on the graph to switch between insertion sort and Quicksort?
 
 Here are those two functions:
 
@@ -16,7 +24,6 @@ These two curves can be interpreted to quantify the number of constant-time step
 
 
 
-Real data produces much more chaotic performance profiles than these smooth, well behaved curves. This is a simplified model illustrating the expected execution time, given some stochastic data set of size n. Given this simplified model, can you identify the ideal n value on the graph to switch between insertion sort and Quicksort?
 
 <pre>function hybridSort(array)
   return inserSort(array) if (__some_critical_value__ > array.length)
@@ -81,3 +88,14 @@ By running a single insertion sort against the entire semi-Quicksorted array, we
 
 Such a loose performance function might be visualized like this:
 
+
+
+
+
+When writing general-purpose code for use in many unforeseeable circumstances, such as a popular library, you could analyze the code in this way, but you'll probably get more reliable results with less effort through empirical performance testing. That's when you write test code to use your code and check the performance metrics as you vary the initial conditions, such as what kind of data is in the sort array, or what's your critical transition value to hand off to insertion sort. Such test code can be automated and randomized in various ways to expose performance characteristics you may not have thought to investigate.
+
+However most of the code we write is not worthy of such treatment. It's more trouble than it's worth to probe the performance of our creations. Most of the time we rely only on our intuition. Our intuition can be trained to see what's important and ignore the rest. When you do test your intuition, be prepared to be surprised about actual performance testing. It's work, but every so often, do that work. It can pay off in tuning a piece of code, but it's greater value is in tuning your intuition.
+
+We have come to the end of the Simple Complexity mini textbook. There's a lot more to algorithmic complexity analysis, but what you've learned here is plenty for the vast majority of situations real software engineers see day-to-day. If you understood most of this material, you're way ahead on this topic.
+
+The next page is a set of exercises and puzzles to put your knowledge to the test.
