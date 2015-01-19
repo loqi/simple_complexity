@@ -10,16 +10,16 @@ Here are those two functions:
 
 
 
-These two curves can be interpreted to quantify the number of constant-time steps required to get the job done. However, each curve plots its function without regard for the time cost of each of these steps. Plotting the curves adjusted for the actual size of those constant-time steps produces kinky curves that vary by actual implementation and only have meaning at integer n values. I'll simplify by using an estimated mean step size for insertion sort (top of part 9) and Quicksort (bottom of part 10). This produces a smooth curve at approximately the right vertical offset and stretch distortion. Let's estimate that for small n values, Quicksort averages about four times more work per inner loop than does insertion sort. Here's how the execution times plot, vertically stretched accordingly:
+These two curves can be interpreted to quantify the number of constant-time steps required to get the job done. However, each of the above curves plots its function without regard for the time cost of each of these steps. Plotting the curves adjusted for the actual size of those constant-time steps produces kinky curves that vary by actual implementation and only have meaning at integer n values. I'll simplify by using an estimated mean step size for insertion sort (top of page 9) and Quicksort (bottom of page 10). This produces a smooth curve at approximately the right vertical offset and vertical stretch. Let's estimate that for small n values, Quicksort averages about twice the work per inner loop than does insertion sort. Here's how the execution times plot, vertically stretched accordingly:
 
 
 
 
 
-This raises an important point. In order for the curves to cross, the steepening algorithm must perform less work per innermost iteration and less overhead (setup and conclusion) work than the proportional algorithm. Real data produces much more chaotic performance profiles than these smooth, well behaved curves. This is a simplified model illustrating the expected execution time, given some stochastic data set of size n. Given this simplified model, can you identify the ideal n value on the graph to switch between insertion sort and Quicksort?
+Real data produces much more chaotic performance profiles than these smooth, well behaved curves. This is a simplified model illustrating the expected execution time, given some stochastic data set of size n. Given this simplified model, can you identify the ideal n value on the graph to switch between insertion sort and Quicksort?
 
 <pre>function hybridSort(array)
-  return inserSort(array) if (array.length < some_critical_value )
+  return inserSort(array) if (__some_critical_value__ > array.length)
   return qSort(array, 0, array.length-1)
  
 function qSort(array, lo, hi)
@@ -29,13 +29,19 @@ function qSort(array, lo, hi)
     qInserSort(array, innerHi+1, hi)
     return array</pre>
 
-You might be tempted to choose the n value where the two lines cross as the ideal critical value. Let's explore that thought. Using Quicksort for n > 20 and insertion sort for n < 20 produces a combined execution profile like so:
+You might be tempted to choose the n value where the two lines cross as the ideal critical value. Let's explore that thought. Using Quicksort for length 20 or more, and insertion sort for length 20 or less produces a combined execution profile like this:
+
+
+
+
+
+That gives a dramatic improvement when n is near 10, but otherwise very little savings, and identical performance for everything array longer than 20. Essentially, we get savings when n is too small to care about. A better hybridization would be to do a large number of small insertion sorts, multiplying the savings by that large number:
 
 <pre>function hybridSort(array)
   return qInserSort(array, 0, array.length-1)
 
 function qInserSort(array, lo, hi)
-  return inserSort(array, lo, hi) unless lo + some_critical_value < hi
+  return inserSort(array, lo, hi) if lo + some_critical_value > hi
   [innerLo, innerHi] = dutchFlagify(array, lo, hi)
   qInserSort(array, lo, innerLo-1)
   qInserSort(array, innerHi+1, hi)
@@ -44,41 +50,34 @@ function qInserSort(array, lo, hi)
 
 
 
+Now we get the dramatic improvement whenever a recursion of qInserSort is less than the critical value. In effect, we get the savings every time we touch the recursion's base case. The base case is no longer an n of 0 or 1 where the array is too short to need sorting, but now it's where the array is short enough where insertion sort substantially outperforms Quicksort.
 
-That gives a dramatic improvement when n is near 10, but otherwise very little savings, and identical performance in most cases. Essentially, we get savings when n is too small to care about, and only sometimes at that. A better hybridization would be to do a large number of small insertion sorts, multiplying the savings by that large number:
+It turns out that the ideal critical value is not where the two curves cross, but where their derivatives cross. The best time to make the handoff is when the savings is biggest -- the place where the steepness of the two curves match. Here is a conceptual diagram of that point in the two functions.
 
-
-
-
-Now we get the dramatic improvement whenever a recursion of qInserSort is less than the critical value. In effect, we get the savings of the naive interpretation with every return from the base case in the recursion. But now instead of a base case where tiny arrays of length 0 or 1 are too short to be out-of-sequence, our base case is with small arrays where insertion sort is optimal over quicksort.
-
-
-Here's a more performant version:
-
-<pre>function hybridSort(array)
-  coarseQSort(array, 0, array.length-1)
-  return inserSort(array)
-
-function coarseQSort(array, lo, hi)
-  return unless lo + some_critical_value < hi
-  [innerLo, innerHi] = dutchFlagify(array, lo, hi)
-  qInserSort(array, lo, innerLo-1)
-  qInserSort(array, innerHi+1, hi)
-  return array
-</pre>
-
-By running a single insertion sort against the entire semi-quicksorted array, we save the overhead of calling and setting up many small insertion sorts, while the insertion crawls are the same regardless.
 
 Let's see this new hybrid algorithm's simplified execution time profile:
 
 
 
-
-Now we have a much flatter curve, providing much higher sorting throughput. This hybrid algorithm can handle much bigger arrays with the same resources as a pure quicksort, and much, much bigger arrays than a pure insertion sort.
-
-It turns out that the ideal critical value is not where the two curves cross, but where their derivatives cross. The best place to make the handoff is the place where the curves are furthest apart, which is also the place where the steepness of the two curves matches. Here is a conceptual diagram of that point in the two functions.
+Now we have a flatter curve, providing higher throughput. This hybrid algorithm can handle much bigger arrays with the same resources as a pure Quicksort, and much, much bigger arrays than a pure insertion sort. This windfall pulls the right side of the curve down the furthest, and if this can happen many times along the spectrum of n values, the curve is substantially flattened. Imagine the naive implementation at the top of this page being invoked against a large number of small arrays. Small n values are not too small to care about if you run the algorithm a large number of times. That is effectively what we have here.
 
 
 
+Here's a nicer version:
 
-In other words, the place where the per-n workload is furthest apart, the windfall pulls the right side of the curve down the furthest, and if this can happen many times along the spectrum of n values, the curve is substantially flattened.
+<pre>function hybridSort(array)
+  coarseQuicksort(array, 0, array.length-1, 14)
+  return inserSort(array)
+
+function coarseQuicksort(array, lo, hi, grit)
+  return if lo + grit >= hi
+  [innerLo, innerHi] = dutchFlagify(array, lo, hi)
+  coarseQuicksort(array, lo, innerLo-1)
+  coarseQuicksort(array, innerHi+1, hi)
+  return array
+</pre>
+
+By running a single insertion sort against the entire semi-Quicksorted array, we save the overhead of calling and setting up many small insertion sorts, while the length of the insertion crawls are the same regardless of one long or many short invocations. Here the critical value `grit` is hard-coded as 13. That puts the transition typically between [math]hi-lo = 14[/math] e.g 102..116 width 15, and [math]hi-lo = (15-1)/2 - 1 = 6[/math] e.g. 102..108 width 7. Since a partition can be unbalanced, the possible width of the hot zone array[lo..hi] could be anywhere in the 0..15 range, with a tendency to fall in the 7..15 range.
+
+Such a loose performance function might be visualized like this:
+
