@@ -81,7 +81,7 @@ However it's not always appropriate to think only in terms of worst case complex
 13   pivVal = array[hi]
 14   i = lo  ;  j = hi - 1
 15   loop
-16       i++ while array[i] < pivVal
+16       i++ while array[i] <= pivVal
 17       j-- while i < j and array[j] > pivVal
 18       exit loop unless i < j
 19       swap(array, i, j)
@@ -96,7 +96,7 @@ The above quicksort algorithm has quadratic [math]O(n^2)[/math] time complexity 
 
 Under what circumstances would we see this worst-case performance?
 
-This pivot strategy works great if the array comes in with high stochasticity, but what if the array comes already sorted, either ascending or descending? That would be a worst-case initial state. This causes every pivot to be near one end or the other, resulting in all radically lopsided partitions. If pivots fall close to the middle, you get a nice logarithmic pattern of recursion where each call is against half as much data as the parent call. If it's close to one end, the short half finishes in constant time and the long half has barely made any progress. In effect, it'll run like insertion sort, but with more work per step and quadratically growing call stack. Given a heavily biased initial state that will happen often, causing the whole thing to run in quadratic time. Doubling the biased array length will quadruple the running time.
+This pivot strategy works great if the array comes in with high stochasticity, but what if the array comes already sorted, either ascending or descending? That would be a worst-case initial state. This causes every pivot to be near one end or the other, resulting in all radically lopsided partitions. If pivots fall close to the middle, you get a nice logarithmic pattern of recursion where each call is against half as much data as the parent call. If it's close to one end, the short half finishes in constant time and the long half has barely made any progress. In effect, it'll run like insertion sort, but with more work per step and quadratically growing call stack. Given a heavily biased initial state, that case will happen often, causing the whole thing to run in quadratic time. Doubling the biased array length will quadruple the running time.
 
 Some variants of quicksort use exactly this pivot strategy, but to avoid the rather common case where the data arrives somewhat pre-sorted, it is first shuffled before quicksorting it, like so:
 
@@ -132,9 +132,9 @@ We are no longer shuffling the array before sorting it. Instead we use the pivot
 
 By introducing randomness, we guard against some joker handing us data carefully crafted to give our algorithm a hard time. It's not as if we forsee this as a major possibility, but it's certainly higher likelihood than one in [math]{n!}[/math] event. Actually, one of us might be that very joker. It's very likely we haven't thought of a fairly common use case that will consistently bog down our algorithm. Introducing randomness gives us assurance against our own oversight.
 
-We still have the worst case running in quadratic time. But now the likelihood is just as remote as with the shuffle technique for that worst case performance. In the best case, we get presorted data and our partitions are consistently at the middle, and we have very few swaps, mostly just scans.
+We still have the worst case running in quadratic time. But now the likelihood is even more remote than with the shuffle technique for that worst case performance. In the best case, we get presorted data and our partitions are consistently at the middle, and we have very few swaps, mostly just scans.
 
-What happens when nearly all the elements are equal? In that case, the loop on lines 15..19 flings every element it sees into the other half of the partition. The effect is that there's an inordinate number of swaps taking place, but the partitions will consistently be well balanced, giving [math]O(n\ log\ n)[/math] time and space complexity because each recursion is against a run half as long as its parent recursion.
+What happens when nearly all the elements are equal? In that case, the loop on lines 15..19 flings every element it sees into the left side of the partition. Each recursion into the left side then still has all those tie elements to deal with. The effect is that there's an inordinate number of swaps taking place, but the partitions will consistently be well balanced, giving [math]O(n\ log\ n)[/math] time and space complexity because each recursion is against a run half as long as its parent recursion.
 
 We can make a variant of quicksort that runs in linear [math]O(n)[/math] time and linear space when given an array of nearly all identical elements.
 
@@ -161,7 +161,7 @@ function dutchFlagify(array, lo, hi)
   return [innerLo, innerHi]
 </pre>
 
-Here the partition function is called dutchFlagify and instead of flinging the pivot-tying elements across the middle, it collects them into a stripe, which might be very wide indeed. Once placed, these elements are in their final position and are not touched again for the duration of the sort. This version of quicksort runs in linear time in the case when the elements are mostly equal. In such a case, it's likely that the first or second pivot choice will hit the heavily repeated element and then they will be gathered together in a single traversal of the array, leaving only a few stragglers at either end.
+Here the partition function is called dutchFlagify and instead of flinging the pivot-tying elements across the middle, it collects them into a stripe, which might be very wide indeed. Once placed, these elements are in their final position and are not touched again for the duration of the sort. This version of quicksort runs in linear time in the case when the elements are mostly equal. In such a case, it's likely that one of the earliest pivot choices will hit the heavily repeated element and then they will be gathered together in a single traversal of the array, leaving only a few stragglers at either end.
 
 The cost of this version is that there's more work in cases where there's not much repetition of elements. This innermost loop is slightly more expensive per element, although not much more expensive. It is probably a better general-purpose variant of quicksort, but as stated throughout this series, if you know something about the data your algorithm is likely to see, you can make intelligent decisions in tailoring your code to your data. Honestly though, the runtime difference between any of these variants of quicksort is negligible for most circumstances you'll be putting them to. Just go with the Dutch flag partition against the median of three pivot unless you can articulate a specific reason for something else.
 
