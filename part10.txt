@@ -1,4 +1,4 @@
-<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 8" href="http://stickybits.azurewebsites.net/?p=11411"> or previous page</a>
+<a title="Simple Complexity" href="http://stickybits.azurewebsites.net/?p=41">jump to beginning of series</a><a title="Simple Complexity 9" href="http://stickybits.azurewebsites.net/?p=11411"> or previous page</a>
 
 <big><strong><em>Best case, worst case, average case</em> -- how do they work?</strong> These terms don't describe your algorithm. They don't describe the size of the N value. They describe the <em>initial state</em> your algorithm is asked to operate with. In other words, the most convenient and least convenient possible arrangement of input data for your particular algorithm.</big>
 
@@ -67,13 +67,13 @@ That's a great reason to assume the worst in our big O expressions. It's just ea
 
 However it's not always appropriate to think only in terms of worst case complexity. I'll illustrate this with quicksort.
 <pre> 1 function quicksort(array)
- 2   return quicksortRegion(array, 0, array.length-1)
+ 2   return qSort(array, 0, array.length-1)
 
- 4 function quicksortRegion(array, lo, hi)
+ 4 function qSort(array, lo, hi)
  5   return array unless lo < hi
  6   pivIndex = qsPartition(array, lo, hi)
- 7   quicksortRegion(array, lo, pivIndex-1)
- 8   quicksortRegion(array, pivIndex+1, hi)
+ 7   qSort(array, lo, pivIndex-1)
+ 8   qSort(array, pivIndex+1, hi)
  9   return array
 
 11 function qsPartition(array, lo, hi)
@@ -101,7 +101,7 @@ This pivot strategy works great if the array comes in with high stochasticity, b
 Some variants of quicksort use exactly this pivot strategy, but to avoid the rather common case where the data arrives somewhat pre-sorted, it is first shuffled before quicksorting it, like so:
 
 <pre>function quicksort(array)
-  return quicksortRegion(shuffle(array), 0, array.length-1)
+  return qSort(shuffle(array), 0, array.length-1)
 </pre>
 
 That initial shuffle solves many problems. A good shuffling algorithm runs in linear time [math]O(n)[/math] and creates a perfectly unbiased result. With this adjustment, the time complexities are best [math]O(n\ log\ n)[/math], typical [math]O(n\ log\ n)[/math] and worst [math]O(n^2)[/math].
@@ -113,7 +113,7 @@ Statistically, this shuffling quicksort will yield consistent performance result
 But wait, shuffling the array not only protects us from the worst case, it also protects us from the best case. Surely there must be a way to turn the nearly-sortedness of the initial array to our advantage, not a liability. Here's a different pivot strategy.
 
 <pre>function quicksort(array)
-  return quicksortRegion(array, 0, array.length-1)
+  return qSort(array, 0, array.length-1)
 
 // Median of three: middle, random left, random right
 function choosePivot(array, lo, hi)
@@ -128,7 +128,7 @@ function choosePivot(array, lo, hi)
   return rightIx if array[leftIx] > array[rightIx]
   return leftIx</pre>
 
-We are no longer shuffling the array before sorting it. Instead we use the pivot strategy of identifying the median between the middle element, and an element randomly chosen from ahead and behind the middle one, giving priority to the middle one in the case of a tie. This gives us a few advantages over a fully random strategy. If the array is already nearly sorted, it runs much faster. The best case is still linearithmic, but it's a faster linearithmic because the quicksortRegion function does almost no writing, only rapid forward scanning in the tight while loop (line 16). We can think of this as [math]n\ log\ n[/math] steps, where nearly all the steps are extremely tiny. Remember, time complexity is not the same as execution time, so not all linearithmic complexities are created equal.
+We are no longer shuffling the array before sorting it. Instead we use the pivot strategy of identifying the median between the middle element, and an element randomly chosen from ahead and behind the middle one, giving priority to the middle one in the case of a tie. This gives us a few advantages over a fully random strategy. If the array is already nearly sorted, it runs much faster. The best case is still linearithmic, but it's a faster linearithmic because the qSort function does almost no writing, only rapid forward scanning in the tight while loop (line 16). We can think of this as [math]n\ log\ n[/math] steps, where nearly all the steps are extremely tiny. Remember, time complexity is not the same as execution time, so not all linearithmic complexities are created equal.
 
 By introducing randomness, we guard against some joker handing us data carefully crafted to give our algorithm a hard time. It's not as if we forsee this as a major possibility, but it's certainly higher likelihood than one in [math]{n!}[/math] event. Actually, one of us might be that very joker. It's very likely we haven't thought of a fairly common use case that will consistently bog down our algorithm. Introducing randomness gives us assurance against our own oversight.
 
@@ -139,13 +139,13 @@ What happens when nearly all the elements are equal? In that case, the loop on l
 We can make a variant of quicksort that runs in linear [math]O(n)[/math] time and linear space when given an array of nearly all identical elements.
 
 <pre>function quicksort(array)
-  return quicksortRegion(array, 0, array.length-1)
+  return qSort(array, 0, array.length-1)
 
-function quicksortRegion(array, lo, hi)
+function qSort(array, lo, hi)
   return array unless lo < hi
   [innerLo, innerHi] = dutchFlagify(array, lo, hi)
-  quicksortRegion(array, lo, innerLo-1)
-  quicksortRegion(array, innerHi+1, hi)
+  qSort(array, lo, innerLo-1)
+  qSort(array, innerHi+1, hi)
   return array
 
 function dutchFlagify(array, lo, hi)
